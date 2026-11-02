@@ -1,0 +1,2399 @@
+
+                        <!DOCTYPE html>
+                        <html lang="en">
+                        <head>
+                            <meta charset="UTF-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+							<style>
+								body {
+									background-color: white; /* Ensure the iframe has a white background */
+								}
+
+								
+:root {
+  --pink: #f472b6;
+  --pink-light: #fce7f3;
+  --pink-dark: #be185d;
+  --purple: #a78bfa;
+  --purple-light: #ede9fe;
+  --blue: #60a5fa;
+  --blue-light: #eff6ff;
+  --green: #34d399;
+  --green-light: #ecfdf5;
+  --yellow: #fbbf24;
+  --yellow-light: #fffbeb;
+  --red: #f87171;
+  --red-light: #fff1f2;
+  --bg: #fff5fb;
+  --card: #ffffff;
+  --text: #1e293b;
+  --muted: #94a3b8;
+  --radius: 20px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Jua', 'Noto Sans KR', sans-serif;
+  background: var(--bg); color: var(--text);
+  min-height: 100vh; letter-spacing: 0.3px;
+}
+.site-header {
+  background: linear-gradient(135deg, #ec4899, #a78bfa, #60a5fa);
+  color: white; padding: 36px 20px 28px; text-align: center;
+  position: relative; overflow: hidden;
+}
+.site-header::before {
+  content:''; position:absolute; inset:0;
+  background: radial-gradient(circle at 20% 50%, rgba(255,255,255,0.12) 0%, transparent 50%),
+              radial-gradient(circle at 80% 20%, rgba(255,255,255,0.12) 0%, transparent 50%);
+}
+.site-header h1 { font-size:2.1em; position:relative; text-shadow:0 2px 10px rgba(0,0,0,0.15); }
+.site-header p  { opacity:.9; margin-top:8px; font-size:1em; position:relative; }
+.header-decos { display:flex; justify-content:center; gap:10px; margin-top:14px; flex-wrap:wrap; position:relative; }
+.header-deco  { background:rgba(255,255,255,0.25); border:1px solid rgba(255,255,255,0.5); border-radius:20px; padding:5px 14px; font-size:.82em; }
+.prog-wrap {
+  background:white; padding:12px 24px;
+  box-shadow:0 2px 12px rgba(244,114,182,0.15);
+  position:sticky; top:0; z-index:200;
+  display:flex; align-items:center; gap:12px;
+  border-bottom:2px solid var(--pink-light);
+}
+.prog-wrap span { font-size:.85em; color:var(--muted); white-space:nowrap; }
+.prog-track { flex:1; height:12px; background:#fce7f3; border-radius:10px; overflow:hidden; }
+.prog-fill {
+  height:100%;
+  background:linear-gradient(90deg,#f472b6,#a78bfa,#60a5fa);
+  border-radius:10px; transition:width .6s cubic-bezier(.4,0,.2,1); width:0%;
+  position:relative;
+}
+.prog-fill::after { content:'✨'; position:absolute; right:-4px; top:-4px; font-size:14px; }
+#progPct { font-weight:800; color:var(--pink-dark); min-width:36px; }
+.chapter-nav {
+  display:flex; flex-wrap:wrap; justify-content:center; gap:8px;
+  padding:14px 16px; background:white;
+  border-bottom:2px solid var(--pink-light);
+  position:sticky; top:50px; z-index:190;
+}
+.ch-btn {
+  padding:8px 16px; border:2px solid #fce7f3; border-radius:30px;
+  background:white; color:var(--muted); cursor:pointer;
+  font-family:'Jua',sans-serif; font-size:.83em;
+  transition:all .25s; display:flex; align-items:center; gap:5px;
+}
+.ch-btn:hover:not(.locked) { border-color:var(--pink); color:var(--pink); }
+.ch-btn.active {
+  background:linear-gradient(135deg,#f472b6,#a78bfa);
+  border-color:transparent; color:white;
+  box-shadow:0 4px 14px rgba(244,114,182,0.4);
+}
+.ch-btn.locked { opacity:.4; cursor:not-allowed; pointer-events:none; }
+.section { display:none; animation:fadeUp .35s ease; }
+.section.active { display:block; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+.container { max-width:860px; margin:24px auto; padding:0 16px; }
+.card {
+  background:var(--card); border-radius:var(--radius);
+  padding:24px; margin-bottom:18px;
+  box-shadow:0 4px 20px rgba(244,114,182,0.08);
+  border:1.5px solid #fce7f3;
+}
+.card-title {
+  font-size:1.15em; color:var(--pink-dark);
+  margin-bottom:16px; padding-bottom:12px;
+  border-bottom:2px dashed #fbcfe8;
+  display:flex; align-items:center; gap:8px;
+}
+.hl { border-radius:12px; padding:14px 16px; margin:10px 0; line-height:2; }
+.hl-pink   { background:#fdf2f8; border-left:4px solid #f472b6; }
+.hl-blue   { background:#eff6ff; border-left:4px solid #60a5fa; }
+.hl-green  { background:#ecfdf5; border-left:4px solid #34d399; }
+.hl-red    { background:#fff1f2; border-left:4px solid #f87171; }
+.hl-amber  { background:#fffbeb; border-left:4px solid #fbbf24; }
+.hl-purple { background:#f5f3ff; border-left:4px solid #a78bfa; }
+.tag { display:inline-block; padding:3px 10px; border-radius:20px; font-size:.8em; margin:2px; }
+.tag-pink   { background:#fce7f3; color:#be185d; }
+.tag-blue   { background:#dbeafe; color:#1d4ed8; }
+.tag-green  { background:#d1fae5; color:#065f46; }
+.tag-red    { background:#fee2e2; color:#991b1b; }
+.tag-purple { background:#ede9fe; color:#5b21b6; }
+.tag-amber  { background:#fef3c7; color:#92400e; }
+.step-container { margin:12px 0; }
+.step-card { border:2px solid #fce7f3; border-radius:14px; overflow:hidden; margin-bottom:10px; transition:all .3s; }
+.step-card.revealed { border-color:var(--pink); box-shadow:0 4px 16px rgba(244,114,182,0.15); }
+.step-header { display:flex; align-items:center; gap:12px; padding:14px 18px; cursor:pointer; background:#fff5fb; transition:background .2s; user-select:none; }
+.step-card.revealed .step-header { background:#fdf2f8; }
+.step-header:hover { background:#fce7f3; }
+.step-num { width:34px; height:34px; border-radius:50%; background:#fce7f3; display:flex; align-items:center; justify-content:center; font-size:.9em; flex-shrink:0; transition:all .3s; color:var(--pink-dark); }
+.step-card.revealed .step-num { background:linear-gradient(135deg,#f472b6,#a78bfa); color:white; }
+.step-title-text { font-size:.97em; flex:1; }
+.step-arrow { font-size:1em; transition:transform .3s; color:var(--pink); }
+.step-card.revealed .step-arrow { transform:rotate(90deg); }
+.step-body { display:none; padding:16px 18px; border-top:1.5px dashed #fce7f3; animation:fadeUp .25s ease; }
+.step-card.revealed .step-body { display:block; }
+.btn { display:inline-flex; align-items:center; gap:6px; padding:10px 22px; border:none; border-radius:30px; cursor:pointer; font-family:'Jua',sans-serif; font-size:.92em; transition:all .25s; margin:4px; }
+.btn-pink   { background:linear-gradient(135deg,#f472b6,#ec4899); color:white; box-shadow:0 4px 14px rgba(244,114,182,0.4); }
+.btn-pink:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(244,114,182,0.5); }
+.btn-purple { background:linear-gradient(135deg,#a78bfa,#7c3aed); color:white; box-shadow:0 4px 14px rgba(167,139,250,0.4); }
+.btn-green  { background:linear-gradient(135deg,#34d399,#059669); color:white; box-shadow:0 4px 14px rgba(52,211,153,0.3); }
+.btn-green:hover { transform:translateY(-2px); }
+.btn-ghost  { background:#fdf2f8; color:var(--pink-dark); border:1.5px solid #fbcfe8; }
+.btn-ghost:hover { background:#fce7f3; }
+.complete-btn-wrap { text-align:center; margin:20px 0 8px; }
+.complete-btn {
+  background:linear-gradient(135deg,#f472b6,#a78bfa); color:white;
+  border:none; border-radius:30px; padding:14px 36px;
+  font-family:'Jua',sans-serif; font-size:1.05em; cursor:pointer;
+  box-shadow:0 6px 20px rgba(244,114,182,0.4); transition:all .3s;
+  display:inline-flex; align-items:center; gap:8px;
+}
+.complete-btn:hover:not(.btn-locked) { transform:translateY(-3px); box-shadow:0 10px 28px rgba(244,114,182,0.5); }
+.complete-btn.btn-locked {
+  background: linear-gradient(135deg,#cbd5e1,#94a3b8);
+  box-shadow: none; cursor:not-allowed; opacity:.7;
+}
+.task-status {
+  background:#fff5fb; border:1.5px dashed #fbcfe8; border-radius:14px;
+  padding:14px 18px; margin:14px 0;
+}
+.task-status-title { font-size:.9em; color:var(--pink-dark); margin-bottom:10px; font-weight:bold; }
+.task-item {
+  display:flex; align-items:center; gap:10px;
+  padding:8px 0; border-bottom:1px dashed #fce7f3; font-size:.88em; color:var(--muted);
+}
+.task-item:last-child { border-bottom:none; }
+.task-item.done { color:var(--text); }
+.task-check {
+  width:24px; height:24px; border-radius:50%;
+  border:2px solid #fbcfe8; background:white;
+  display:flex; align-items:center; justify-content:center;
+  font-size:.85em; flex-shrink:0; transition:all .3s;
+}
+.task-item.done .task-check { background:linear-gradient(135deg,#f472b6,#a78bfa); border-color:transparent; color:white; }
+.tbl { width:100%; border-collapse:collapse; margin:12px 0; font-size:.9em; }
+.tbl th { background:linear-gradient(135deg,#f472b6,#a78bfa); color:white; padding:10px 12px; text-align:center; }
+.tbl td { padding:9px 12px; border:1.5px solid #fce7f3; text-align:center; }
+.tbl tr:nth-child(even) td { background:#fff5fb; }
+.svg-wrap { width:100%; overflow-x:auto; margin:14px 0; text-align:center; }
+.fc-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(170px,1fr)); gap:12px; margin:14px 0; }
+.fc { height:140px; perspective:1000px; cursor:pointer; }
+.fc-inner { width:100%; height:100%; position:relative; transform-style:preserve-3d; transition:transform .55s; }
+.fc.flipped .fc-inner { transform:rotateY(180deg); }
+.fc-f,.fc-b { position:absolute; inset:0; backface-visibility:hidden; border-radius:16px; display:flex; align-items:center; justify-content:center; text-align:center; padding:12px; }
+.fc-f { background:linear-gradient(135deg,#f472b6,#a78bfa); color:white; font-size:1em; }
+.fc-b { background:white; border:2px solid #fce7f3; color:var(--text); font-size:.85em; line-height:1.6; transform:rotateY(180deg); }
+.fc.flipped .fc-f { box-shadow:none; }
+.fc.flipped { outline:3px solid #34d399; border-radius:16px; }
+.blank-wrap { background:#fff5fb; border-radius:14px; padding:18px; margin:12px 0; line-height:3.2; border:1.5px dashed #fbcfe8; }
+.blank { border:none; border-bottom:2.5px solid var(--pink); background:transparent; width:88px; text-align:center; font-family:'Jua',sans-serif; font-size:.95em; outline:none; padding:2px 4px; margin:0 4px; transition:all .2s; }
+.blank.ok  { border-color:#34d399; background:#ecfdf5; border-radius:8px; color:#065f46; }
+.blank.err { border-color:#f87171; background:#fff1f2; border-radius:8px; color:#991b1b; }
+.quiz-q-display { background:#fff5fb; border-radius:16px; padding:20px; border:1.5px solid #fce7f3; margin-bottom:14px; }
+.quiz-q-num { font-size:.82em; color:var(--pink); margin-bottom:8px; }
+.quiz-q-text { font-size:1em; line-height:1.7; margin-bottom:14px; }
+.quiz-opts { display:flex; flex-direction:column; gap:8px; }
+.quiz-opt { padding:12px 16px; border:2px solid #fce7f3; border-radius:12px; cursor:pointer; background:white; text-align:left; font-family:'Jua',sans-serif; font-size:.93em; transition:all .2s; }
+.quiz-opt:hover:not(:disabled) { border-color:var(--pink); background:#fdf2f8; }
+.quiz-opt.right { border-color:#34d399; background:#ecfdf5; color:#065f46; }
+.quiz-opt.wrong { border-color:#f87171; background:#fff1f2; color:#991b1b; }
+.explanation-box { display:none; border-radius:14px; padding:16px; margin:10px 0; border:1.5px solid; animation:fadeUp .3s ease; }
+.explanation-box.show { display:block; }
+.explanation-box.correct-exp { background:#ecfdf5; border-color:#34d399; color:#065f46; }
+.explanation-box.wrong-exp   { background:#fff1f2; border-color:#f87171; color:#991b1b; }
+.exp-title { font-size:1em; margin-bottom:6px; }
+.exp-text  { line-height:1.85; font-size:.93em; }
+.quiz-progress-dots { display:flex; justify-content:center; gap:8px; margin:14px 0; }
+.q-dot { width:12px; height:12px; border-radius:50%; background:#fce7f3; border:2px solid #fbcfe8; transition:all .3s; }
+.q-dot.done-correct { background:#34d399; border-color:#34d399; }
+.q-dot.done-wrong   { background:#f87171; border-color:#f87171; }
+.q-dot.current { background:var(--pink); border-color:var(--pink); transform:scale(1.3); }
+.result-box { display:none; margin-top:14px; background:linear-gradient(135deg,#f472b6,#a78bfa); color:white; border-radius:16px; padding:22px; text-align:center; }
+.result-box.show { display:block; animation:fadeUp .4s ease; }
+.result-score { font-size:2.5em; margin-bottom:6px; }
+.sticker-area { position:relative; margin:14px 0; border-radius:16px; overflow:hidden; border:2px solid #fce7f3; background:#fff5fb; user-select:none; }
+.sticker-area svg { display:block; width:100%; height:auto; }
+.sticker-palette { display:flex; flex-wrap:wrap; gap:10px; padding:14px; background:white; border:1.5px solid #fce7f3; border-radius:14px; margin-bottom:12px; }
+.sticker-item { display:flex; flex-direction:column; align-items:center; gap:4px; padding:8px 12px; border-radius:12px; background:#fff5fb; border:2px solid #fce7f3; cursor:grab; transition:all .2s; font-family:'Jua',sans-serif; font-size:.78em; color:var(--text); }
+.sticker-item:hover { border-color:var(--pink); transform:translateY(-2px); box-shadow:0 4px 12px rgba(244,114,182,0.2); }
+.sticker-item.selected-sticker { border-color:var(--pink); background:#fdf2f8; box-shadow:0 0 0 3px rgba(244,114,182,0.3); }
+.sticker-icon { font-size:1.8em; }
+.drop-zone { cursor:pointer; transition:all .2s; }
+.placed-sticker { pointer-events:none; animation:popIn .3s cubic-bezier(.175,.885,.32,1.275); }
+@keyframes popIn { from{transform:scale(0)} to{transform:scale(1)} }
+.sticker-feedback { text-align:center; padding:12px; font-size:.95em; border-radius:12px; margin:8px 0; display:none; }
+.sticker-feedback.show { display:block; animation:fadeUp .3s ease; }
+.sticker-feedback.all-correct { background:#ecfdf5; color:#065f46; border:1.5px solid #34d399; }
+.sticker-feedback.partial     { background:#fffbeb; color:#92400e; border:1.5px solid #fbbf24; }
+.flow { display:flex; flex-direction:column; align-items:center; }
+.flow-box { padding:12px 26px; border-radius:14px; color:white; text-align:center; width:220px; box-shadow:0 4px 14px rgba(0,0,0,.12); }
+.flow-arrow { color:var(--pink); font-size:1.6em; margin:2px 0; }
+.cl { list-style:none; }
+.cl li { display:flex; align-items:center; gap:12px; padding:12px 16px; margin:8px 0; background:#fff5fb; border-radius:14px; cursor:pointer; border:2px solid #fce7f3; transition:all .25s; }
+.cl li:hover { border-color:var(--pink); }
+.cl li.done { background:#ecfdf5; border-color:#34d399; }
+.cl li input[type=checkbox] { width:20px; height:20px; accent-color:#f472b6; flex-shrink:0; }
+.anim-stage-wrap { background:linear-gradient(135deg,#0f172a,#1e1b4b); border-radius:18px; padding:18px; margin:14px 0; border:2px solid rgba(167,139,250,0.3); }
+.anim-canvas-container { position:relative; width:100%; background:#0d1b2a; border-radius:12px; overflow:hidden; border:1.5px solid rgba(167,139,250,0.3); }
+#nephronCanvas { display:block; width:100%; height:auto; }
+.phase-btns { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin:14px 0 8px; }
+.phase-btn { padding:10px 20px; border:2px solid transparent; border-radius:30px; font-family:'Jua',sans-serif; font-size:.88em; cursor:pointer; transition:all .25s; color:white; }
+.phase-btn.filtration   { background:linear-gradient(135deg,#60a5fa,#3b82f6); }
+.phase-btn.reabsorption { background:linear-gradient(135deg,#34d399,#059669); }
+.phase-btn.secretion    { background:linear-gradient(135deg,#f87171,#dc2626); }
+.phase-btn.all          { background:linear-gradient(135deg,#a78bfa,#7c3aed); }
+.phase-btn:hover { transform:translateY(-2px); box-shadow:0 6px 16px rgba(0,0,0,.3); }
+.phase-btn.active-phase { box-shadow:0 0 0 3px white,0 0 0 5px rgba(255,255,255,0.3); transform:translateY(-2px); }
+.phase-btn.phase-done::after { content:' ✅'; }
+.legend-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:7px; margin:12px 0 6px; }
+.legend-item { display:flex; align-items:center; gap:7px; background:rgba(255,255,255,0.08); border-radius:10px; padding:6px 10px; color:white; font-size:.8em; }
+.legend-shape { width:22px; height:22px; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+.phase-info-panel {
+  border-radius:12px; padding:16px 18px; margin:10px 0;
+  color: #1e293b;
+  font-size:.95em; line-height:2; display:none;
+}
+.phase-info-panel.show { display:block; animation:fadeUp .25s ease; }
+.phase-info-panel.f-panel { background:rgba(219,234,254,0.9); border:2px solid #3b82f6; }
+.phase-info-panel.r-panel { background:rgba(209,250,229,0.9); border:2px solid #059669; }
+.phase-info-panel.s-panel { background:rgba(254,226,226,0.9); border:2px solid #dc2626; }
+.phase-info-panel.a-panel { background:rgba(237,233,254,0.9); border:2px solid #7c3aed; }
+.congrats-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:1000; align-items:center; justify-content:center; }
+.congrats-overlay.show { display:flex; }
+.congrats-box { background:white; border-radius:24px; padding:40px; text-align:center; max-width:360px; width:90%; animation:popIn .4s cubic-bezier(.175,.885,.32,1.275); border:3px solid var(--pink-light); }
+.congrats-emoji { font-size:4em; margin-bottom:12px; }
+.congrats-box h2 { font-size:1.6em; color:var(--pink-dark); margin-bottom:8px; }
+.congrats-box p  { color:var(--muted); margin-bottom:18px; line-height:1.7; }
+.toast {
+  position:fixed; bottom:30px; left:50%; transform:translateX(-50%) translateY(20px);
+  background:linear-gradient(135deg,#be185d,#7c3aed);
+  color:white; padding:14px 28px; border-radius:30px;
+  font-family:'Jua',sans-serif; font-size:.95em;
+  box-shadow:0 8px 24px rgba(190,24,93,0.4);
+  z-index:2000; opacity:0; transition:all .35s cubic-bezier(.4,0,.2,1);
+  pointer-events:none; white-space:nowrap;
+}
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+.site-footer { text-align:center; padding:28px 20px; color:var(--muted); font-size:.88em; border-top:2px dashed #fce7f3; margin-top:40px; background:white; }
+.made-by { display:inline-block; background:linear-gradient(135deg,#f472b6,#a78bfa,#60a5fa); color:white; padding:8px 26px; border-radius:30px; margin-top:10px; font-size:1em; letter-spacing:.5px; box-shadow:0 4px 14px rgba(244,114,182,0.35); }
+@media(max-width:600px){
+  .site-header h1{font-size:1.5em}
+  .ch-btn{font-size:.76em;padding:6px 10px}
+  .fc-grid{grid-template-columns:1fr 1fr}
+  .flow-box{width:185px}
+  .legend-grid{grid-template-columns:1fr 1fr}
+}
+/* ══ 로그인 화면 ══ */
+#loginScreen {
+  min-height:100vh; display:flex; align-items:center;
+  justify-content:center; padding:20px;
+  background:linear-gradient(135deg,#fff5fb,#ede9fe,#eff6ff);
+}
+.login-card {
+  background:white; border-radius:28px; padding:44px 38px;
+  box-shadow:0 12px 48px rgba(244,114,182,0.2);
+  max-width:440px; width:100%; text-align:center;
+  border:2px solid #fce7f3;
+}
+.login-emoji { font-size:3.8rem; display:block; margin-bottom:10px; animation:floatEmoji 2.4s ease-in-out infinite; }
+@keyframes floatEmoji { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+.login-title { font-size:1.7rem; color:var(--pink-dark); margin-bottom:4px; }
+.login-sub   { font-size:.92rem; color:var(--muted); margin-bottom:28px; }
+.login-form  { display:flex; flex-direction:column; gap:14px; text-align:left; }
+.login-row   { display:flex; gap:10px; }
+.login-label { font-size:.9rem; color:var(--pink-dark); margin-bottom:3px; display:block; }
+.login-input {
+  font-family:'Jua',sans-serif; width:100%; padding:12px 16px;
+  font-size:1rem; border:2px solid #fce7f3; border-radius:14px;
+  outline:none; color:var(--text); background:#fff5fb; transition:border-color .2s;
+}
+.login-input:focus { border-color:var(--pink); background:white; }
+.login-input.err  { border-color:var(--red); background:var(--red-light); }
+.login-err { font-size:.85rem; color:var(--red); display:none; margin-top:-8px; }
+.login-btn {
+  font-family:'Jua',sans-serif; width:100%; padding:14px; font-size:1.1rem;
+  border:none; border-radius:18px; background:linear-gradient(135deg,#f472b6,#a78bfa);
+  color:white; cursor:pointer; margin-top:6px;
+  box-shadow:0 4px 14px rgba(244,114,182,0.4); transition:transform .2s;
+}
+.login-btn:hover { transform:scale(1.02); }
+.login-notice { margin-top:18px; padding:12px 16px; background:#fff5fb; border-radius:12px; font-size:.85rem; color:var(--muted); line-height:1.6; border:1px dashed #fbcfe8; }
+/* ══ 결과 제출 카드 ══ */
+.submit-card { max-width:860px; margin:0 auto 40px; padding:0 16px; }
+.submit-inner { background:white; border-radius:var(--radius); padding:24px; box-shadow:0 4px 20px rgba(244,114,182,0.08); border:1.5px solid #fce7f3; }
+.submit-info-box { background:#fff5fb; border-radius:12px; padding:14px 18px; margin-bottom:16px; font-size:.9rem; line-height:2.2; border:1.5px solid #fce7f3; }
+.submit-btn-main {
+  font-family:'Jua',sans-serif; display:block; width:100%; padding:15px; font-size:1.1rem;
+  border:none; border-radius:18px; background:linear-gradient(135deg,#f472b6,#a78bfa);
+  color:white; cursor:pointer; box-shadow:0 4px 16px rgba(244,114,182,0.4); transition:transform .2s;
+}
+.submit-btn-main:hover:not(:disabled) { transform:scale(1.02); }
+.submit-btn-main:disabled { opacity:.5; cursor:not-allowed; transform:none; }
+.submit-done-box { display:none; text-align:center; padding:24px; background:#ecfdf5; border-radius:16px; margin-top:14px; border:1.5px solid #34d399; }
+
+
+							</style>
+                        </head>
+                        <body>
+                            <!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🫘 배설계 자기주도 학습</title>
+<link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+<style>
+:root {
+  --pink: #f472b6;
+  --pink-light: #fce7f3;
+  --pink-dark: #be185d;
+  --purple: #a78bfa;
+  --purple-light: #ede9fe;
+  --blue: #60a5fa;
+  --blue-light: #eff6ff;
+  --green: #34d399;
+  --green-light: #ecfdf5;
+  --yellow: #fbbf24;
+  --yellow-light: #fffbeb;
+  --red: #f87171;
+  --red-light: #fff1f2;
+  --bg: #fff5fb;
+  --card: #ffffff;
+  --text: #1e293b;
+  --muted: #94a3b8;
+  --radius: 20px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Jua', 'Noto Sans KR', sans-serif;
+  background: var(--bg); color: var(--text);
+  min-height: 100vh; letter-spacing: 0.3px;
+}
+.site-header {
+  background: linear-gradient(135deg, #ec4899, #a78bfa, #60a5fa);
+  color: white; padding: 36px 20px 28px; text-align: center;
+  position: relative; overflow: hidden;
+}
+.site-header::before {
+  content:''; position:absolute; inset:0;
+  background: radial-gradient(circle at 20% 50%, rgba(255,255,255,0.12) 0%, transparent 50%),
+              radial-gradient(circle at 80% 20%, rgba(255,255,255,0.12) 0%, transparent 50%);
+}
+.site-header h1 { font-size:2.1em; position:relative; text-shadow:0 2px 10px rgba(0,0,0,0.15); }
+.site-header p  { opacity:.9; margin-top:8px; font-size:1em; position:relative; }
+.header-decos { display:flex; justify-content:center; gap:10px; margin-top:14px; flex-wrap:wrap; position:relative; }
+.header-deco  { background:rgba(255,255,255,0.25); border:1px solid rgba(255,255,255,0.5); border-radius:20px; padding:5px 14px; font-size:.82em; }
+.prog-wrap {
+  background:white; padding:12px 24px;
+  box-shadow:0 2px 12px rgba(244,114,182,0.15);
+  position:sticky; top:0; z-index:200;
+  display:flex; align-items:center; gap:12px;
+  border-bottom:2px solid var(--pink-light);
+}
+.prog-wrap span { font-size:.85em; color:var(--muted); white-space:nowrap; }
+.prog-track { flex:1; height:12px; background:#fce7f3; border-radius:10px; overflow:hidden; }
+.prog-fill {
+  height:100%;
+  background:linear-gradient(90deg,#f472b6,#a78bfa,#60a5fa);
+  border-radius:10px; transition:width .6s cubic-bezier(.4,0,.2,1); width:0%;
+  position:relative;
+}
+.prog-fill::after { content:'✨'; position:absolute; right:-4px; top:-4px; font-size:14px; }
+#progPct { font-weight:800; color:var(--pink-dark); min-width:36px; }
+.chapter-nav {
+  display:flex; flex-wrap:wrap; justify-content:center; gap:8px;
+  padding:14px 16px; background:white;
+  border-bottom:2px solid var(--pink-light);
+  position:sticky; top:50px; z-index:190;
+}
+.ch-btn {
+  padding:8px 16px; border:2px solid #fce7f3; border-radius:30px;
+  background:white; color:var(--muted); cursor:pointer;
+  font-family:'Jua',sans-serif; font-size:.83em;
+  transition:all .25s; display:flex; align-items:center; gap:5px;
+}
+.ch-btn:hover:not(.locked) { border-color:var(--pink); color:var(--pink); }
+.ch-btn.active {
+  background:linear-gradient(135deg,#f472b6,#a78bfa);
+  border-color:transparent; color:white;
+  box-shadow:0 4px 14px rgba(244,114,182,0.4);
+}
+.ch-btn.locked { opacity:.4; cursor:not-allowed; pointer-events:none; }
+.section { display:none; animation:fadeUp .35s ease; }
+.section.active { display:block; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+.container { max-width:860px; margin:24px auto; padding:0 16px; }
+.card {
+  background:var(--card); border-radius:var(--radius);
+  padding:24px; margin-bottom:18px;
+  box-shadow:0 4px 20px rgba(244,114,182,0.08);
+  border:1.5px solid #fce7f3;
+}
+.card-title {
+  font-size:1.15em; color:var(--pink-dark);
+  margin-bottom:16px; padding-bottom:12px;
+  border-bottom:2px dashed #fbcfe8;
+  display:flex; align-items:center; gap:8px;
+}
+.hl { border-radius:12px; padding:14px 16px; margin:10px 0; line-height:2; }
+.hl-pink   { background:#fdf2f8; border-left:4px solid #f472b6; }
+.hl-blue   { background:#eff6ff; border-left:4px solid #60a5fa; }
+.hl-green  { background:#ecfdf5; border-left:4px solid #34d399; }
+.hl-red    { background:#fff1f2; border-left:4px solid #f87171; }
+.hl-amber  { background:#fffbeb; border-left:4px solid #fbbf24; }
+.hl-purple { background:#f5f3ff; border-left:4px solid #a78bfa; }
+.tag { display:inline-block; padding:3px 10px; border-radius:20px; font-size:.8em; margin:2px; }
+.tag-pink   { background:#fce7f3; color:#be185d; }
+.tag-blue   { background:#dbeafe; color:#1d4ed8; }
+.tag-green  { background:#d1fae5; color:#065f46; }
+.tag-red    { background:#fee2e2; color:#991b1b; }
+.tag-purple { background:#ede9fe; color:#5b21b6; }
+.tag-amber  { background:#fef3c7; color:#92400e; }
+.step-container { margin:12px 0; }
+.step-card { border:2px solid #fce7f3; border-radius:14px; overflow:hidden; margin-bottom:10px; transition:all .3s; }
+.step-card.revealed { border-color:var(--pink); box-shadow:0 4px 16px rgba(244,114,182,0.15); }
+.step-header { display:flex; align-items:center; gap:12px; padding:14px 18px; cursor:pointer; background:#fff5fb; transition:background .2s; user-select:none; }
+.step-card.revealed .step-header { background:#fdf2f8; }
+.step-header:hover { background:#fce7f3; }
+.step-num { width:34px; height:34px; border-radius:50%; background:#fce7f3; display:flex; align-items:center; justify-content:center; font-size:.9em; flex-shrink:0; transition:all .3s; color:var(--pink-dark); }
+.step-card.revealed .step-num { background:linear-gradient(135deg,#f472b6,#a78bfa); color:white; }
+.step-title-text { font-size:.97em; flex:1; }
+.step-arrow { font-size:1em; transition:transform .3s; color:var(--pink); }
+.step-card.revealed .step-arrow { transform:rotate(90deg); }
+.step-body { display:none; padding:16px 18px; border-top:1.5px dashed #fce7f3; animation:fadeUp .25s ease; }
+.step-card.revealed .step-body { display:block; }
+.btn { display:inline-flex; align-items:center; gap:6px; padding:10px 22px; border:none; border-radius:30px; cursor:pointer; font-family:'Jua',sans-serif; font-size:.92em; transition:all .25s; margin:4px; }
+.btn-pink   { background:linear-gradient(135deg,#f472b6,#ec4899); color:white; box-shadow:0 4px 14px rgba(244,114,182,0.4); }
+.btn-pink:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(244,114,182,0.5); }
+.btn-purple { background:linear-gradient(135deg,#a78bfa,#7c3aed); color:white; box-shadow:0 4px 14px rgba(167,139,250,0.4); }
+.btn-green  { background:linear-gradient(135deg,#34d399,#059669); color:white; box-shadow:0 4px 14px rgba(52,211,153,0.3); }
+.btn-green:hover { transform:translateY(-2px); }
+.btn-ghost  { background:#fdf2f8; color:var(--pink-dark); border:1.5px solid #fbcfe8; }
+.btn-ghost:hover { background:#fce7f3; }
+.complete-btn-wrap { text-align:center; margin:20px 0 8px; }
+.complete-btn {
+  background:linear-gradient(135deg,#f472b6,#a78bfa); color:white;
+  border:none; border-radius:30px; padding:14px 36px;
+  font-family:'Jua',sans-serif; font-size:1.05em; cursor:pointer;
+  box-shadow:0 6px 20px rgba(244,114,182,0.4); transition:all .3s;
+  display:inline-flex; align-items:center; gap:8px;
+}
+.complete-btn:hover:not(.btn-locked) { transform:translateY(-3px); box-shadow:0 10px 28px rgba(244,114,182,0.5); }
+.complete-btn.btn-locked {
+  background: linear-gradient(135deg,#cbd5e1,#94a3b8);
+  box-shadow: none; cursor:not-allowed; opacity:.7;
+}
+.task-status {
+  background:#fff5fb; border:1.5px dashed #fbcfe8; border-radius:14px;
+  padding:14px 18px; margin:14px 0;
+}
+.task-status-title { font-size:.9em; color:var(--pink-dark); margin-bottom:10px; font-weight:bold; }
+.task-item {
+  display:flex; align-items:center; gap:10px;
+  padding:8px 0; border-bottom:1px dashed #fce7f3; font-size:.88em; color:var(--muted);
+}
+.task-item:last-child { border-bottom:none; }
+.task-item.done { color:var(--text); }
+.task-check {
+  width:24px; height:24px; border-radius:50%;
+  border:2px solid #fbcfe8; background:white;
+  display:flex; align-items:center; justify-content:center;
+  font-size:.85em; flex-shrink:0; transition:all .3s;
+}
+.task-item.done .task-check { background:linear-gradient(135deg,#f472b6,#a78bfa); border-color:transparent; color:white; }
+.tbl { width:100%; border-collapse:collapse; margin:12px 0; font-size:.9em; }
+.tbl th { background:linear-gradient(135deg,#f472b6,#a78bfa); color:white; padding:10px 12px; text-align:center; }
+.tbl td { padding:9px 12px; border:1.5px solid #fce7f3; text-align:center; }
+.tbl tr:nth-child(even) td { background:#fff5fb; }
+.svg-wrap { width:100%; overflow-x:auto; margin:14px 0; text-align:center; }
+.fc-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(170px,1fr)); gap:12px; margin:14px 0; }
+.fc { height:140px; perspective:1000px; cursor:pointer; }
+.fc-inner { width:100%; height:100%; position:relative; transform-style:preserve-3d; transition:transform .55s; }
+.fc.flipped .fc-inner { transform:rotateY(180deg); }
+.fc-f,.fc-b { position:absolute; inset:0; backface-visibility:hidden; border-radius:16px; display:flex; align-items:center; justify-content:center; text-align:center; padding:12px; }
+.fc-f { background:linear-gradient(135deg,#f472b6,#a78bfa); color:white; font-size:1em; }
+.fc-b { background:white; border:2px solid #fce7f3; color:var(--text); font-size:.85em; line-height:1.6; transform:rotateY(180deg); }
+.fc.flipped .fc-f { box-shadow:none; }
+.fc.flipped { outline:3px solid #34d399; border-radius:16px; }
+.blank-wrap { background:#fff5fb; border-radius:14px; padding:18px; margin:12px 0; line-height:3.2; border:1.5px dashed #fbcfe8; }
+.blank { border:none; border-bottom:2.5px solid var(--pink); background:transparent; width:88px; text-align:center; font-family:'Jua',sans-serif; font-size:.95em; outline:none; padding:2px 4px; margin:0 4px; transition:all .2s; }
+.blank.ok  { border-color:#34d399; background:#ecfdf5; border-radius:8px; color:#065f46; }
+.blank.err { border-color:#f87171; background:#fff1f2; border-radius:8px; color:#991b1b; }
+.quiz-q-display { background:#fff5fb; border-radius:16px; padding:20px; border:1.5px solid #fce7f3; margin-bottom:14px; }
+.quiz-q-num { font-size:.82em; color:var(--pink); margin-bottom:8px; }
+.quiz-q-text { font-size:1em; line-height:1.7; margin-bottom:14px; }
+.quiz-opts { display:flex; flex-direction:column; gap:8px; }
+.quiz-opt { padding:12px 16px; border:2px solid #fce7f3; border-radius:12px; cursor:pointer; background:white; text-align:left; font-family:'Jua',sans-serif; font-size:.93em; transition:all .2s; }
+.quiz-opt:hover:not(:disabled) { border-color:var(--pink); background:#fdf2f8; }
+.quiz-opt.right { border-color:#34d399; background:#ecfdf5; color:#065f46; }
+.quiz-opt.wrong { border-color:#f87171; background:#fff1f2; color:#991b1b; }
+.explanation-box { display:none; border-radius:14px; padding:16px; margin:10px 0; border:1.5px solid; animation:fadeUp .3s ease; }
+.explanation-box.show { display:block; }
+.explanation-box.correct-exp { background:#ecfdf5; border-color:#34d399; color:#065f46; }
+.explanation-box.wrong-exp   { background:#fff1f2; border-color:#f87171; color:#991b1b; }
+.exp-title { font-size:1em; margin-bottom:6px; }
+.exp-text  { line-height:1.85; font-size:.93em; }
+.quiz-progress-dots { display:flex; justify-content:center; gap:8px; margin:14px 0; }
+.q-dot { width:12px; height:12px; border-radius:50%; background:#fce7f3; border:2px solid #fbcfe8; transition:all .3s; }
+.q-dot.done-correct { background:#34d399; border-color:#34d399; }
+.q-dot.done-wrong   { background:#f87171; border-color:#f87171; }
+.q-dot.current { background:var(--pink); border-color:var(--pink); transform:scale(1.3); }
+.result-box { display:none; margin-top:14px; background:linear-gradient(135deg,#f472b6,#a78bfa); color:white; border-radius:16px; padding:22px; text-align:center; }
+.result-box.show { display:block; animation:fadeUp .4s ease; }
+.result-score { font-size:2.5em; margin-bottom:6px; }
+.sticker-area { position:relative; margin:14px 0; border-radius:16px; overflow:hidden; border:2px solid #fce7f3; background:#fff5fb; user-select:none; }
+.sticker-area svg { display:block; width:100%; height:auto; }
+.sticker-palette { display:flex; flex-wrap:wrap; gap:10px; padding:14px; background:white; border:1.5px solid #fce7f3; border-radius:14px; margin-bottom:12px; }
+.sticker-item { display:flex; flex-direction:column; align-items:center; gap:4px; padding:8px 12px; border-radius:12px; background:#fff5fb; border:2px solid #fce7f3; cursor:grab; transition:all .2s; font-family:'Jua',sans-serif; font-size:.78em; color:var(--text); }
+.sticker-item:hover { border-color:var(--pink); transform:translateY(-2px); box-shadow:0 4px 12px rgba(244,114,182,0.2); }
+.sticker-item.selected-sticker { border-color:var(--pink); background:#fdf2f8; box-shadow:0 0 0 3px rgba(244,114,182,0.3); }
+.sticker-icon { font-size:1.8em; }
+.drop-zone { cursor:pointer; transition:all .2s; }
+.placed-sticker { pointer-events:none; animation:popIn .3s cubic-bezier(.175,.885,.32,1.275); }
+@keyframes popIn { from{transform:scale(0)} to{transform:scale(1)} }
+.sticker-feedback { text-align:center; padding:12px; font-size:.95em; border-radius:12px; margin:8px 0; display:none; }
+.sticker-feedback.show { display:block; animation:fadeUp .3s ease; }
+.sticker-feedback.all-correct { background:#ecfdf5; color:#065f46; border:1.5px solid #34d399; }
+.sticker-feedback.partial     { background:#fffbeb; color:#92400e; border:1.5px solid #fbbf24; }
+.flow { display:flex; flex-direction:column; align-items:center; }
+.flow-box { padding:12px 26px; border-radius:14px; color:white; text-align:center; width:220px; box-shadow:0 4px 14px rgba(0,0,0,.12); }
+.flow-arrow { color:var(--pink); font-size:1.6em; margin:2px 0; }
+.cl { list-style:none; }
+.cl li { display:flex; align-items:center; gap:12px; padding:12px 16px; margin:8px 0; background:#fff5fb; border-radius:14px; cursor:pointer; border:2px solid #fce7f3; transition:all .25s; }
+.cl li:hover { border-color:var(--pink); }
+.cl li.done { background:#ecfdf5; border-color:#34d399; }
+.cl li input[type=checkbox] { width:20px; height:20px; accent-color:#f472b6; flex-shrink:0; }
+.anim-stage-wrap { background:linear-gradient(135deg,#0f172a,#1e1b4b); border-radius:18px; padding:18px; margin:14px 0; border:2px solid rgba(167,139,250,0.3); }
+.anim-canvas-container { position:relative; width:100%; background:#0d1b2a; border-radius:12px; overflow:hidden; border:1.5px solid rgba(167,139,250,0.3); }
+#nephronCanvas { display:block; width:100%; height:auto; }
+.phase-btns { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin:14px 0 8px; }
+.phase-btn { padding:10px 20px; border:2px solid transparent; border-radius:30px; font-family:'Jua',sans-serif; font-size:.88em; cursor:pointer; transition:all .25s; color:white; }
+.phase-btn.filtration   { background:linear-gradient(135deg,#60a5fa,#3b82f6); }
+.phase-btn.reabsorption { background:linear-gradient(135deg,#34d399,#059669); }
+.phase-btn.secretion    { background:linear-gradient(135deg,#f87171,#dc2626); }
+.phase-btn.all          { background:linear-gradient(135deg,#a78bfa,#7c3aed); }
+.phase-btn:hover { transform:translateY(-2px); box-shadow:0 6px 16px rgba(0,0,0,.3); }
+.phase-btn.active-phase { box-shadow:0 0 0 3px white,0 0 0 5px rgba(255,255,255,0.3); transform:translateY(-2px); }
+.phase-btn.phase-done::after { content:' ✅'; }
+.legend-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:7px; margin:12px 0 6px; }
+.legend-item { display:flex; align-items:center; gap:7px; background:rgba(255,255,255,0.08); border-radius:10px; padding:6px 10px; color:white; font-size:.8em; }
+.legend-shape { width:22px; height:22px; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+.phase-info-panel {
+  border-radius:12px; padding:16px 18px; margin:10px 0;
+  color: #1e293b;
+  font-size:.95em; line-height:2; display:none;
+}
+.phase-info-panel.show { display:block; animation:fadeUp .25s ease; }
+.phase-info-panel.f-panel { background:rgba(219,234,254,0.9); border:2px solid #3b82f6; }
+.phase-info-panel.r-panel { background:rgba(209,250,229,0.9); border:2px solid #059669; }
+.phase-info-panel.s-panel { background:rgba(254,226,226,0.9); border:2px solid #dc2626; }
+.phase-info-panel.a-panel { background:rgba(237,233,254,0.9); border:2px solid #7c3aed; }
+.congrats-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:1000; align-items:center; justify-content:center; }
+.congrats-overlay.show { display:flex; }
+.congrats-box { background:white; border-radius:24px; padding:40px; text-align:center; max-width:360px; width:90%; animation:popIn .4s cubic-bezier(.175,.885,.32,1.275); border:3px solid var(--pink-light); }
+.congrats-emoji { font-size:4em; margin-bottom:12px; }
+.congrats-box h2 { font-size:1.6em; color:var(--pink-dark); margin-bottom:8px; }
+.congrats-box p  { color:var(--muted); margin-bottom:18px; line-height:1.7; }
+.toast {
+  position:fixed; bottom:30px; left:50%; transform:translateX(-50%) translateY(20px);
+  background:linear-gradient(135deg,#be185d,#7c3aed);
+  color:white; padding:14px 28px; border-radius:30px;
+  font-family:'Jua',sans-serif; font-size:.95em;
+  box-shadow:0 8px 24px rgba(190,24,93,0.4);
+  z-index:2000; opacity:0; transition:all .35s cubic-bezier(.4,0,.2,1);
+  pointer-events:none; white-space:nowrap;
+}
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+.site-footer { text-align:center; padding:28px 20px; color:var(--muted); font-size:.88em; border-top:2px dashed #fce7f3; margin-top:40px; background:white; }
+.made-by { display:inline-block; background:linear-gradient(135deg,#f472b6,#a78bfa,#60a5fa); color:white; padding:8px 26px; border-radius:30px; margin-top:10px; font-size:1em; letter-spacing:.5px; box-shadow:0 4px 14px rgba(244,114,182,0.35); }
+@media(max-width:600px){
+  .site-header h1{font-size:1.5em}
+  .ch-btn{font-size:.76em;padding:6px 10px}
+  .fc-grid{grid-template-columns:1fr 1fr}
+  .flow-box{width:185px}
+  .legend-grid{grid-template-columns:1fr 1fr}
+}
+/* ══ 로그인 화면 ══ */
+#loginScreen {
+  min-height:100vh; display:flex; align-items:center;
+  justify-content:center; padding:20px;
+  background:linear-gradient(135deg,#fff5fb,#ede9fe,#eff6ff);
+}
+.login-card {
+  background:white; border-radius:28px; padding:44px 38px;
+  box-shadow:0 12px 48px rgba(244,114,182,0.2);
+  max-width:440px; width:100%; text-align:center;
+  border:2px solid #fce7f3;
+}
+.login-emoji { font-size:3.8rem; display:block; margin-bottom:10px; animation:floatEmoji 2.4s ease-in-out infinite; }
+@keyframes floatEmoji { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+.login-title { font-size:1.7rem; color:var(--pink-dark); margin-bottom:4px; }
+.login-sub   { font-size:.92rem; color:var(--muted); margin-bottom:28px; }
+.login-form  { display:flex; flex-direction:column; gap:14px; text-align:left; }
+.login-row   { display:flex; gap:10px; }
+.login-label { font-size:.9rem; color:var(--pink-dark); margin-bottom:3px; display:block; }
+.login-input {
+  font-family:'Jua',sans-serif; width:100%; padding:12px 16px;
+  font-size:1rem; border:2px solid #fce7f3; border-radius:14px;
+  outline:none; color:var(--text); background:#fff5fb; transition:border-color .2s;
+}
+.login-input:focus { border-color:var(--pink); background:white; }
+.login-input.err  { border-color:var(--red); background:var(--red-light); }
+.login-err { font-size:.85rem; color:var(--red); display:none; margin-top:-8px; }
+.login-btn {
+  font-family:'Jua',sans-serif; width:100%; padding:14px; font-size:1.1rem;
+  border:none; border-radius:18px; background:linear-gradient(135deg,#f472b6,#a78bfa);
+  color:white; cursor:pointer; margin-top:6px;
+  box-shadow:0 4px 14px rgba(244,114,182,0.4); transition:transform .2s;
+}
+.login-btn:hover { transform:scale(1.02); }
+.login-notice { margin-top:18px; padding:12px 16px; background:#fff5fb; border-radius:12px; font-size:.85rem; color:var(--muted); line-height:1.6; border:1px dashed #fbcfe8; }
+/* ══ 결과 제출 카드 ══ */
+.submit-card { max-width:860px; margin:0 auto 40px; padding:0 16px; }
+.submit-inner { background:white; border-radius:var(--radius); padding:24px; box-shadow:0 4px 20px rgba(244,114,182,0.08); border:1.5px solid #fce7f3; }
+.submit-info-box { background:#fff5fb; border-radius:12px; padding:14px 18px; margin-bottom:16px; font-size:.9rem; line-height:2.2; border:1.5px solid #fce7f3; }
+.submit-btn-main {
+  font-family:'Jua',sans-serif; display:block; width:100%; padding:15px; font-size:1.1rem;
+  border:none; border-radius:18px; background:linear-gradient(135deg,#f472b6,#a78bfa);
+  color:white; cursor:pointer; box-shadow:0 4px 16px rgba(244,114,182,0.4); transition:transform .2s;
+}
+.submit-btn-main:hover:not(:disabled) { transform:scale(1.02); }
+.submit-btn-main:disabled { opacity:.5; cursor:not-allowed; transform:none; }
+.submit-done-box { display:none; text-align:center; padding:24px; background:#ecfdf5; border-radius:16px; margin-top:14px; border:1.5px solid #34d399; }
+</style>
+</head>
+<body>
+
+<!-- ══ 로그인 화면 ══ -->
+<div id="loginScreen">
+  <div class="login-card">
+    <span class="login-emoji">🫘</span>
+    <div class="login-title">배설계 자기주도 학습</div>
+    <div class="login-sub">2학년 과학 · Unit 2 에너지가 만드는 건강한 삶 🌸</div>
+    <div class="login-form">
+      <div class="login-row">
+        <div style="flex:1;">
+          <label class="login-label">반 *</label>
+          <input class="login-input" id="inp-class" type="number" min="1" max="20" placeholder="예) 3">
+        </div>
+        <div style="flex:1;">
+          <label class="login-label">번호 *</label>
+          <input class="login-input" id="inp-num" type="number" min="1" max="40" placeholder="예) 15">
+        </div>
+      </div>
+      <div>
+        <label class="login-label">이름 *</label>
+        <input class="login-input" id="inp-name" type="text" placeholder="이름을 입력하세요" maxlength="8">
+      </div>
+      <div class="login-err" id="loginErr">⚠️ 반, 번호, 이름을 모두 입력해주세요!</div>
+      <button class="login-btn" onclick="doLogin()">🌸 학습 시작하기</button>
+    </div>
+    <div class="login-notice">
+      💡 입력한 정보는 학습 결과 제출 시 선생님께 전달됩니다.<br>정확하게 입력해주세요 🌸
+    </div>
+  </div>
+</div>
+
+<!-- ══ 메인 앱 ══ -->
+<div id="mainApp" style="display:none;">
+
+<div class="toast" id="lockToast"></div>
+<header class="site-header">
+  <h1>🫘✨ 배설계 자기주도 학습</h1>
+  <p>2학년 과학 · Unit 2 에너지가 만드는 건강한 삶 🌸</p>
+  <div class="header-decos">
+    <span class="header-deco">📖 교과서 연계</span>
+    <span class="header-deco">🎯 단계별 학습</span>
+    <span class="header-deco">🎬 애니메이션</span>
+    <span class="header-deco">🩷 스티커 퀴즈</span>
+  </div>
+  <div id="studentBadge" style="display:none;margin-top:10px;background:rgba(255,255,255,0.25);border:1px solid rgba(255,255,255,0.5);border-radius:20px;padding:5px 18px;font-size:.88em;"></div>
+</header>
+<div class="prog-wrap">
+  <span>🌸 진도</span>
+  <div class="prog-track"><div class="prog-fill" id="pFill"></div></div>
+  <span id="progPct">0%</span>
+</div>
+<nav class="chapter-nav">
+  <button class="ch-btn active"  id="ch-btn-0" onclick="goChapter(0)">🌟 학습목표</button>
+  <button class="ch-btn locked" id="ch-btn-1" onclick="goChapter(1)">🔒 💧 노폐물</button>
+  <button class="ch-btn locked" id="ch-btn-2" onclick="goChapter(2)">🔒 🫘 배설계구조</button>
+  <button class="ch-btn locked" id="ch-btn-3" onclick="goChapter(3)">🔒 🔬 네프론</button>
+  <button class="ch-btn locked" id="ch-btn-4" onclick="goChapter(4)">🔒 🎬 물질이동</button>
+  <button class="ch-btn locked" id="ch-btn-5" onclick="goChapter(5)">🔒 🃏 플래시카드</button>
+  <button class="ch-btn locked" id="ch-btn-6" onclick="goChapter(6)">🔒 ✏️ 퀴즈</button>
+  <button class="ch-btn locked" id="ch-btn-7" onclick="goChapter(7)">🔒 ✅ 마무리</button>
+</nav>
+<div class="container">
+
+<!-- ══ 0. 학습목표 ══ -->
+<div class="section active" id="tab-0">
+  <div class="card">
+    <div class="card-title">🌟 학습 목표</div>
+    <div class="hl hl-pink">
+      <p>📌 배설계의 구조와 기능을 설명할 수 있다.</p>
+      <p>📌 노폐물이 배설되는 과정을 모식도로 표현할 수 있다.</p>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">💭 생각해보기 🌸</div>
+    <div class="hl hl-amber">
+      <p>❓ 콩팥이 제대로 기능하지 않아 혈액 투석을 받아야 한다면 어떤 문제가 생길까요?</p>
+    </div>
+    <button class="btn btn-pink" onclick="toggleEl('hint1'); markTask(0,'hint')">💡 힌트 보기 / 숨기기</button>
+    <div id="hint1" style="display:none;" class="hl hl-green">
+      <p>✅ 콩팥은 혈액 속 <strong>요소 등 노폐물</strong>을 걸러내는 역할을 해요.<br>
+      기능하지 않으면 노폐물이 혈액에 쌓여 <strong>요독증</strong>이 생겨요!</p>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">🗺️ 오늘의 학습 흐름</div>
+    <p style="color:var(--muted);font-size:.88em;margin-bottom:14px;">각 챕터를 순서대로 학습해요! 앞 챕터를 마쳐야 다음으로 갈 수 있어요 🔒</p>
+    <div class="flow">
+      <div class="flow-box" style="background:linear-gradient(135deg,#f472b6,#ec4899)">💧 노폐물 생성</div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-box" style="background:linear-gradient(135deg,#a78bfa,#7c3aed)">🫘 배설계 구조</div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-box" style="background:linear-gradient(135deg,#60a5fa,#3b82f6)">🔬 네프론</div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-box" style="background:linear-gradient(135deg,#34d399,#059669)">🎬 물질이동 애니메이션</div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-box" style="background:linear-gradient(135deg,#fbbf24,#d97706)">🃏 플래시카드</div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-box" style="background:linear-gradient(135deg,#f87171,#dc2626)">✏️ 퀴즈</div>
+    </div>
+  </div>
+  <div class="task-status" id="task-status-0">
+    <div class="task-status-title">📋 완료해야 다음으로 갈 수 있어요!</div>
+    <div class="task-item" id="task-0-hint"><div class="task-check">1</div> 💡 힌트 버튼 누르기</div>
+  </div>
+  <div class="complete-btn-wrap">
+    <button class="complete-btn btn-locked" id="complete-btn-0" onclick="tryComplete(0)">다음 챕터로 가기 💕 →</button>
+  </div>
+</div>
+
+<!-- ══ 1. 노폐물 ══ -->
+<div class="section" id="tab-1">
+  <div class="card">
+    <div class="card-title">💧 노폐물은 왜 생길까?</div>
+    <div class="hl hl-pink">
+      <p>세포가 <strong>에너지</strong>를 얻기 위해 양분을 분해하는 <strong>세포 호흡</strong> 과정에서 여러 가지 <strong>노폐물</strong>이 생겨요!</p>
+    </div>
+    <div class="step-container">
+      <div class="step-card" id="s-carb">
+        <div class="step-header" onclick="toggleStep('s-carb'); markTask(1,'step-carb')">
+          <div class="step-num">1</div>
+          <div class="step-title-text">🍚 탄수화물 · 지방이 분해될 때</div>
+          <div class="step-arrow">▶</div>
+        </div>
+        <div class="step-body">
+          <div class="hl hl-green"><p>➡ <span class="tag tag-blue">이산화탄소 (CO₂)</span> + <span class="tag tag-green">물 (H₂O)</span> 생성!</p></div>
+        </div>
+      </div>
+      <div class="step-card" id="s-prot">
+        <div class="step-header" onclick="toggleStep('s-prot'); markTask(1,'step-prot')">
+          <div class="step-num">2</div>
+          <div class="step-title-text">🥩 단백질이 분해될 때 (추가 노폐물!)</div>
+          <div class="step-arrow">▶</div>
+        </div>
+        <div class="step-body">
+          <div class="hl hl-red">
+            <p>➡ CO₂ + H₂O + <span class="tag tag-red">암모니아 (NH₃)</span> 추가 생성!</p>
+            <p style="margin-top:8px;">⚠️ 암모니아는 독성이 강해 <strong>간</strong>에서 <strong>요소</strong>로 전환 후 배출!</p>
+          </div>
+          <div class="svg-wrap">
+            <svg width="500" height="90" viewBox="0 0 500 90">
+              <rect x="5" y="25" width="80" height="44" rx="10" fill="#fee2e2"/>
+              <text x="45" y="45" text-anchor="middle" font-size="11" font-family="Jua" fill="#991b1b">🥩 단백질</text>
+              <text x="45" y="62" text-anchor="middle" font-size="10" font-family="Jua" fill="#b91c1c">분해</text>
+              <text x="103" y="51" text-anchor="middle" font-size="18" fill="#f87171">→</text>
+              <rect x="118" y="22" width="90" height="46" rx="10" fill="#fecaca"/>
+              <text x="163" y="42" text-anchor="middle" font-size="11" font-family="Jua" fill="#991b1b">암모니아</text>
+              <text x="163" y="58" text-anchor="middle" font-size="10" font-family="Jua" fill="#b91c1c">⚠️독성강함</text>
+              <text x="226" y="51" text-anchor="middle" font-size="18" fill="#fbbf24">→</text>
+              <rect x="240" y="22" width="65" height="46" rx="10" fill="#fef3c7"/>
+              <text x="272" y="42" text-anchor="middle" font-size="11" font-family="Jua" fill="#92400e">간</text>
+              <text x="272" y="58" text-anchor="middle" font-size="10" font-family="Jua" fill="#b45309">에서 전환</text>
+              <text x="323" y="51" text-anchor="middle" font-size="18" fill="#34d399">→</text>
+              <rect x="337" y="22" width="75" height="46" rx="10" fill="#d1fae5"/>
+              <text x="374" y="42" text-anchor="middle" font-size="11" font-family="Jua" fill="#065f46">요소</text>
+              <text x="374" y="58" text-anchor="middle" font-size="10" font-family="Jua" fill="#059669">오줌 배출</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div class="step-card" id="s-path">
+        <div class="step-header" onclick="toggleStep('s-path'); markTask(1,'step-path')">
+          <div class="step-num">3</div>
+          <div class="step-title-text">🚀 노폐물별 배출 경로 비교</div>
+          <div class="step-arrow">▶</div>
+        </div>
+        <div class="step-body">
+          <table class="tbl">
+            <thead><tr><th>노폐물</th><th>생성 원인</th><th>배출 경로</th><th>배출 방법</th></tr></thead>
+            <tbody>
+              <tr><td><span class="tag tag-blue">이산화탄소</span></td><td>탄·단·지 공통</td><td>혈액→폐</td><td>날숨</td></tr>
+              <tr><td><span class="tag tag-green">물</span></td><td>탄·단·지 공통</td><td>혈액→콩팥/폐/피부</td><td>오줌·날숨·땀</td></tr>
+              <tr><td><span class="tag tag-red">암모니아→요소</span></td><td>단백질만</td><td>혈액→간→콩팥</td><td>오줌</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">✏️ 빈칸 채우기!</div>
+    <div class="blank-wrap">
+      단백질이 분해될 때는 이산화탄소, 물 외에
+      <input class="blank" id="bw1" data-ans="암모니아" placeholder="??">가 추가로 생겨요.
+      이 물질은 독성이 강해 <input class="blank" id="bw2" data-ans="간" placeholder="??">에서
+      <input class="blank" id="bw3" data-ans="요소" placeholder="??">로 바뀐 뒤 오줌으로 배설돼요!
+    </div>
+    <button class="btn btn-green" onclick="chkBlanks1()">✅ 확인하기</button>
+    <button class="btn btn-ghost" onclick="rstBlanks(['bw1','bw2','bw3'],'rw1')">🔄 다시하기</button>
+    <div class="result-box" id="rw1"><div class="result-score" id="sw1"></div><p id="mw1"></p></div>
+  </div>
+  <div class="task-status">
+    <div class="task-status-title">📋 완료해야 다음으로 갈 수 있어요!</div>
+    <div class="task-item" id="task-1-step-carb"><div class="task-check">1</div> 🍚 탄수화물·지방 카드 열기</div>
+    <div class="task-item" id="task-1-step-prot"><div class="task-check">2</div> 🥩 단백질 카드 열기</div>
+    <div class="task-item" id="task-1-step-path"><div class="task-check">3</div> 🚀 배출 경로 카드 열기</div>
+    <div class="task-item" id="task-1-blank"><div class="task-check">4</div> ✏️ 빈칸 채우기 완료 (정답 맞히기)</div>
+  </div>
+  <div class="complete-btn-wrap">
+    <button class="complete-btn btn-locked" id="complete-btn-1" onclick="tryComplete(1)">챕터 완료! 다음으로 💕 →</button>
+  </div>
+</div>
+
+<!-- ══ 2. 배설계 구조 ══ -->
+<div class="section" id="tab-2">
+  <div class="card">
+    <div class="card-title">🫘 배설계란?</div>
+    <div class="hl hl-pink"><p><strong>배설</strong>: 세포 호흡으로 생성된 노폐물을 몸 밖으로 내보내는 과정이에요!</p></div>
+  </div>
+  <div class="card">
+    <div class="card-title">🖼️ 배설계 구조 — 기관을 클릭해봐요! 🌸</div>
+    <div class="svg-wrap">
+      <svg width="380" height="470" viewBox="0 0 380 470">
+        <rect width="380" height="470" rx="18" fill="#fff5fb"/>
+        <ellipse cx="190" cy="72" rx="65" ry="50" fill="#fde8d8" stroke="#e2c0a8" stroke-width="2"/>
+        <text x="190" y="77" text-anchor="middle" font-size="13" font-family="Jua" fill="#92400e">상체</text>
+        <ellipse cx="122" cy="188" rx="40" ry="52" fill="#fce7f3" stroke="#f472b6" stroke-width="2.5" style="cursor:pointer" onclick="showOrgan('kidney')"/>
+        <text x="122" y="183" text-anchor="middle" font-size="15" style="pointer-events:none">🫘</text>
+        <text x="122" y="202" text-anchor="middle" font-size="11" font-family="Jua" fill="#be185d" style="pointer-events:none">콩팥(L)</text>
+        <ellipse cx="258" cy="188" rx="40" ry="52" fill="#fce7f3" stroke="#f472b6" stroke-width="2.5" style="cursor:pointer" onclick="showOrgan('kidney')"/>
+        <text x="258" y="183" text-anchor="middle" font-size="15" style="pointer-events:none">🫘</text>
+        <text x="258" y="202" text-anchor="middle" font-size="11" font-family="Jua" fill="#be185d" style="pointer-events:none">콩팥(R)</text>
+        <path d="M122 240 Q138 305 162 335" fill="none" stroke="#a78bfa" stroke-width="6" stroke-linecap="round" style="cursor:pointer" onclick="showOrgan('ureter')"/>
+        <path d="M258 240 Q242 305 218 335" fill="none" stroke="#a78bfa" stroke-width="6" stroke-linecap="round" style="cursor:pointer" onclick="showOrgan('ureter')"/>
+        <text x="68" y="288" text-anchor="middle" font-size="11" font-family="Jua" fill="#7c3aed" style="cursor:pointer" onclick="showOrgan('ureter')">오줌관</text>
+        <ellipse cx="190" cy="362" rx="52" ry="40" fill="#fef3c7" stroke="#fbbf24" stroke-width="2.5" style="cursor:pointer" onclick="showOrgan('bladder')"/>
+        <text x="190" y="358" text-anchor="middle" font-size="13" style="pointer-events:none">💛</text>
+        <text x="190" y="376" text-anchor="middle" font-size="11" font-family="Jua" fill="#92400e" style="pointer-events:none">방광</text>
+        <line x1="190" y1="403" x2="190" y2="442" stroke="#f87171" stroke-width="6" stroke-linecap="round" style="cursor:pointer" onclick="showOrgan('urethra')"/>
+        <polygon points="182,442 198,442 190,458" fill="#f87171" style="cursor:pointer" onclick="showOrgan('urethra')"/>
+        <text x="228" y="438" font-size="11" font-family="Jua" fill="#991b1b" style="cursor:pointer" onclick="showOrgan('urethra')">요도</text>
+      </svg>
+    </div>
+    <div id="organ-info" class="hl hl-pink" style="display:none;"></div>
+  </div>
+  <div class="card">
+    <div class="card-title">📖 각 기관 — 하나씩 눌러봐요!</div>
+    <div class="step-container">
+      <div class="step-card" id="s-k"><div class="step-header" onclick="toggleStep('s-k'); markTask(2,'step-k')"><div class="step-num">1</div><div class="step-title-text">🫘 콩팥 (Kidney)</div><div class="step-arrow">▶</div></div><div class="step-body"><div class="hl hl-pink"><p>✔ <strong>오줌이 만들어지는 곳</strong> — 등 쪽 허리 좌우에 한 쌍 (2개)</p><p>✔ 콩팥동맥(노폐물 多) → 콩팥정맥(노폐물 少)</p></div></div></div>
+      <div class="step-card" id="s-u"><div class="step-header" onclick="toggleStep('s-u'); markTask(2,'step-u')"><div class="step-num">2</div><div class="step-title-text">🔗 오줌관 (Ureter)</div><div class="step-arrow">▶</div></div><div class="step-body"><div class="hl hl-purple"><p>✔ <strong>콩팥과 방광을 연결</strong>하는 긴 관이에요!</p></div></div></div>
+      <div class="step-card" id="s-b"><div class="step-header" onclick="toggleStep('s-b'); markTask(2,'step-b')"><div class="step-num">3</div><div class="step-title-text">💛 방광 (Bladder)</div><div class="step-arrow">▶</div></div><div class="step-body"><div class="hl hl-amber"><p>✔ <strong>오줌을 모아두는 곳</strong></p><p>✔ 일정량 차면 요의가 느껴져요!</p></div></div></div>
+      <div class="step-card" id="s-ur"><div class="step-header" onclick="toggleStep('s-ur'); markTask(2,'step-ur')"><div class="step-num">4</div><div class="step-title-text">🔴 요도 (Urethra)</div><div class="step-arrow">▶</div></div><div class="step-body"><div class="hl hl-red"><p>✔ <strong>오줌이 몸 밖으로 나가는 통로</strong>예요!</p></div></div></div>
+    </div>
+  </div>
+  <div class="task-status">
+    <div class="task-status-title">📋 완료해야 다음으로 갈 수 있어요!</div>
+    <div class="task-item" id="task-2-organ"><div class="task-check">1</div> 🖼️ 그림에서 기관 클릭하기</div>
+    <div class="task-item" id="task-2-step-k"><div class="task-check">2</div> 🫘 콩팥 카드 열기</div>
+    <div class="task-item" id="task-2-step-u"><div class="task-check">3</div> 🔗 오줌관 카드 열기</div>
+    <div class="task-item" id="task-2-step-b"><div class="task-check">4</div> 💛 방광 카드 열기</div>
+    <div class="task-item" id="task-2-step-ur"><div class="task-check">5</div> 🔴 요도 카드 열기</div>
+  </div>
+  <div class="complete-btn-wrap">
+    <button class="complete-btn btn-locked" id="complete-btn-2" onclick="tryComplete(2)">챕터 완료! 다음으로 💕 →</button>
+  </div>
+</div>
+
+<!-- ══ 3. 네프론 ══ -->
+<div class="section" id="tab-3">
+  <div class="card">
+    <div class="card-title">🔬 네프론이란?</div>
+    <div class="hl hl-blue">
+      <p><strong>네프론 (Nephron)</strong>: 콩팥 속 <strong>오줌 생성의 기본 단위</strong>!</p>
+      <p>💡 사람의 콩팥 하나에 약 <strong>100만 개 이상</strong>의 네프론이 있어요!</p>
+      <p>💡 네프론은 <strong>토리 + 보먼주머니 + 세뇨관</strong>으로 이루어져 있어요!</p>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">🖼️ 네프론 구조 — 부위를 클릭해봐요!</div>
+    <div class="svg-wrap">
+      <svg width="450" height="300" viewBox="0 0 450 300">
+        <rect width="450" height="300" rx="14" fill="#fff5fb"/>
+        <defs><marker id="an" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#f472b6"/></marker></defs>
+        <rect x="8" y="120" width="72" height="30" rx="8" fill="#fee2e2" stroke="#f87171" stroke-width="1.5"/>
+        <text x="44" y="139" text-anchor="middle" font-size="11" font-family="Jua" fill="#991b1b">콩팥동맥</text>
+        <line x1="80" y1="135" x2="106" y2="135" stroke="#f87171" stroke-width="2" marker-end="url(#an)"/>
+        <circle cx="140" cy="135" r="30" fill="#fce7f3" stroke="#f472b6" stroke-width="2.5" style="cursor:pointer" onclick="showNephronPart('tori'); markTask(3,'svg-tori')"/>
+        <path d="M126 128 Q134 118 140 128 Q146 138 154 128" fill="none" stroke="#f472b6" stroke-width="2"/>
+        <path d="M126 138 Q134 128 140 138 Q146 148 154 138" fill="none" stroke="#f472b6" stroke-width="2"/>
+        <text x="140" y="182" text-anchor="middle" font-size="11" font-family="Jua" fill="#be185d">토리</text>
+        <text x="140" y="196" text-anchor="middle" font-size="9" font-family="Jua" fill="#f9a8d4">(구 사구체)</text>
+        <ellipse cx="140" cy="135" rx="49" ry="54" fill="none" stroke="#a78bfa" stroke-width="2.5" stroke-dasharray="5,3" style="cursor:pointer" onclick="showNephronPart('bowman'); markTask(3,'svg-bowman')"/>
+        <text x="80" y="92" text-anchor="middle" font-size="11" font-family="Jua" fill="#5b21b6">보먼주머니</text>
+        <line x1="98" y1="95" x2="112" y2="106" stroke="#a78bfa" stroke-width="1.5" stroke-dasharray="3"/>
+        <path d="M189 135 Q244 92 278 122 Q326 157 336 190 Q346 228 306 248 Q266 268 236 250" fill="none" stroke="#34d399" stroke-width="7" stroke-linecap="round" style="cursor:pointer" onclick="showNephronPart('tubule'); markTask(3,'svg-tubule')"/>
+        <text x="320" y="116" text-anchor="middle" font-size="11" font-family="Jua" fill="#065f46">세뇨관</text>
+        <path d="M198 145 Q248 115 283 140 Q318 168 328 200 Q336 235 302 246" fill="none" stroke="#fbbf24" stroke-width="3" stroke-dasharray="5,3" style="cursor:pointer" onclick="showNephronPart('capillary'); markTask(3,'svg-cap')"/>
+        <text x="378" y="190" text-anchor="middle" font-size="11" font-family="Jua" fill="#92400e">모세혈관</text>
+        <line x1="358" y1="188" x2="330" y2="200" stroke="#fbbf24" stroke-width="1.5" stroke-dasharray="3"/>
+        <rect x="175" y="262" width="78" height="26" rx="8" fill="#d1fae5" stroke="#34d399" stroke-width="1.5"/>
+        <text x="214" y="279" text-anchor="middle" font-size="11" font-family="Jua" fill="#065f46">콩팥정맥</text>
+        <rect x="302" y="262" width="80" height="26" rx="8" fill="#fef3c7" stroke="#fbbf24" stroke-width="1.5"/>
+        <text x="342" y="279" text-anchor="middle" font-size="11" font-family="Jua" fill="#92400e">오줌관으로</text>
+      </svg>
+    </div>
+    <div id="nephron-info" class="hl hl-purple" style="display:none;"></div>
+  </div>
+  <div class="card">
+    <div class="card-title">📖 네프론 구성 요소!</div>
+    <div class="step-container">
+      <div class="step-card" id="s-n1"><div class="step-header" onclick="toggleStep('s-n1'); markTask(3,'step-n1')"><div class="step-num">1</div><div class="step-title-text">🩷 토리 (구 사구체)</div><div class="step-arrow">▶</div></div><div class="step-body"><div class="hl hl-pink"><p>✔ 모세혈관이 꼬여 <strong>실뭉치처럼 뭉친</strong> 부분이에요!</p><p>✔ 보먼주머니 안에 위치 / <strong>여과</strong>가 일어나요!</p></div></div></div>
+      <div class="step-card" id="s-n2"><div class="step-header" onclick="toggleStep('s-n2'); markTask(3,'step-n2')"><div class="step-num">2</div><div class="step-title-text">💜 보먼주머니</div><div class="step-arrow">▶</div></div><div class="step-body"><div class="hl hl-purple"><p>✔ 토리를 둘러싼 <strong>주머니 모양</strong> 구조</p><p>✔ 여과된 물질(여과액)이 모이는 곳!</p></div></div></div>
+      <div class="step-card" id="s-n3"><div class="step-header" onclick="toggleStep('s-n3'); markTask(3,'step-n3')"><div class="step-num">3</div><div class="step-title-text">💚 세뇨관</div><div class="step-arrow">▶</div></div><div class="step-body"><div class="hl hl-green"><p>✔ 보먼주머니와 연결된 <strong>긴 관</strong></p><p>✔ <strong>재흡수</strong>와 <strong>분비</strong>가 여기서 일어나요!</p></div></div></div>
+    </div>
+  </div>
+  <div class="task-status">
+    <div class="task-status-title">📋 완료해야 다음으로 갈 수 있어요!</div>
+    <div class="task-item" id="task-3-svg-tori"><div class="task-check">1</div> 🩷 그림에서 토리 클릭하기</div>
+    <div class="task-item" id="task-3-svg-bowman"><div class="task-check">2</div> 💜 그림에서 보먼주머니 클릭하기</div>
+    <div class="task-item" id="task-3-svg-tubule"><div class="task-check">3</div> 💚 그림에서 세뇨관 클릭하기</div>
+    <div class="task-item" id="task-3-svg-cap"><div class="task-check">4</div> 💛 그림에서 모세혈관 클릭하기</div>
+    <div class="task-item" id="task-3-step-n1"><div class="task-check">5</div> 🩷 토리 카드 열기</div>
+    <div class="task-item" id="task-3-step-n2"><div class="task-check">6</div> 💜 보먼주머니 카드 열기</div>
+    <div class="task-item" id="task-3-step-n3"><div class="task-check">7</div> 💚 세뇨관 카드 열기</div>
+  </div>
+  <div class="complete-btn-wrap">
+    <button class="complete-btn btn-locked" id="complete-btn-3" onclick="tryComplete(3)">챕터 완료! 다음으로 💕 →</button>
+  </div>
+</div>
+
+<!-- ══ 4. 물질이동 애니메이션 ══ -->
+<div class="section" id="tab-4">
+  <div class="card">
+    <div class="card-title">🎬 네프론 물질 이동 애니메이션</div>
+    <div class="hl hl-pink"><p>버튼을 눌러 각 단계별 물질의 이동을 눈으로 확인해봐요! 👀✨</p></div>
+    <div class="phase-btns">
+      <button class="phase-btn filtration"   id="btn-filtration"   onclick="runPhase('filtration')">🔵 여과</button>
+      <button class="phase-btn reabsorption" id="btn-reabsorption" onclick="runPhase('reabsorption')">🟢 재흡수</button>
+      <button class="phase-btn secretion"    id="btn-secretion"    onclick="runPhase('secretion')">🔴 분비</button>
+      <button class="phase-btn all"          id="btn-all"          onclick="runPhase('all')">🌈 전체 과정</button>
+    </div>
+    <div class="phase-info-panel f-panel" id="panel-filtration">
+      <strong>🔵 여과: 토리 → 보먼주머니</strong><br>
+      크기가 <strong>작은</strong> 물질이 빠져나가요!<br>
+      ✅ 여과됨: <span style="color:#1d4ed8;font-weight:bold;">● 물</span> <span style="color:#065f46;font-weight:bold;">■ 포도당</span> <span style="color:#92400e;font-weight:bold;">▲ 아미노산</span> <span style="color:#9d174d;font-weight:bold;">⬠ 요소</span><br>
+      ❌ 못 빠져나감: <span style="color:#991b1b;font-weight:bold;">◆ 단백질</span> <span style="color:#5b21b6;font-weight:bold;">⬭ 혈구</span> (크기 너무 큼!)
+    </div>
+    <div class="phase-info-panel r-panel" id="panel-reabsorption">
+      <strong>🟢 재흡수: 세뇨관 → 모세혈관</strong><br>
+      몸에 <strong>필요한</strong> 물질이 혈액으로 돌아가요!<br>
+      ✅ 재흡수됨: <span style="color:#1d4ed8;font-weight:bold;">● 물(대부분)</span> <span style="color:#065f46;font-weight:bold;">■ 포도당(100%)</span> <span style="color:#92400e;font-weight:bold;">▲ 아미노산(100%)</span><br>
+      ❌ 재흡수 안 됨: <span style="color:#9d174d;font-weight:bold;">⬠ 요소</span> → 오줌으로 배출!
+    </div>
+    <div class="phase-info-panel s-panel" id="panel-secretion">
+      <strong>🔴 분비: 모세혈관 → 세뇨관</strong><br>
+      여과되지 못하고 혈액에 남은 <strong>노폐물</strong>이 세뇨관으로 이동해요!<br>
+      ✅ 분비됨: <span style="color:#9d174d;font-weight:bold;">⬠ 요소</span> 등 노폐물
+    </div>
+    <div class="phase-info-panel a-panel" id="panel-all">
+      <strong>🌈 전체 과정: 여과 → 재흡수 → 분비</strong><br>
+      세 단계가 순서대로 일어나며 오줌이 만들어져요!<br>
+      최종 오줌: <span style="color:#9d174d;font-weight:bold;">⬠ 요소</span> + <span style="color:#1d4ed8;font-weight:bold;">● 물(일부)</span>
+    </div>
+    <div class="anim-stage-wrap">
+      <div class="legend-grid">
+        <div class="legend-item"><svg class="legend-shape" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#60a5fa"/></svg><span>물 (H₂O)</span></div>
+        <div class="legend-item"><svg class="legend-shape" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="4" fill="#34d399"/></svg><span>포도당</span></div>
+        <div class="legend-item"><svg class="legend-shape" viewBox="0 0 24 24"><polygon points="12,2 22,22 2,22" fill="#fbbf24"/></svg><span>아미노산</span></div>
+        <div class="legend-item"><svg class="legend-shape" viewBox="0 0 24 24"><polygon points="12,2 22,9 19,22 5,22 2,9" fill="#f472b6"/></svg><span>요소</span></div>
+        <div class="legend-item"><svg class="legend-shape" viewBox="0 0 24 24"><path d="M12 2 L22 8 L22 16 L12 22 L2 16 L2 8 Z" fill="#f87171"/></svg><span>단백질</span></div>
+        <div class="legend-item"><svg class="legend-shape" viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="11" ry="7" fill="#a78bfa"/></svg><span>혈구</span></div>
+      </div>
+      <div class="anim-canvas-container">
+        <canvas id="nephronCanvas" width="860" height="480"></canvas>
+      </div>
+      <div style="text-align:center;margin-top:12px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+        <button class="btn btn-ghost" onclick="stopAnim()" style="background:rgba(255,255,255,0.12);color:white;border-color:rgba(255,255,255,0.25);">⏹ 정지</button>
+        <button class="btn btn-ghost" onclick="resetAnim()" style="background:rgba(255,255,255,0.12);color:white;border-color:rgba(255,255,255,0.25);">🔄 초기화</button>
+      </div>
+    </div>
+  </div>
+  <div class="task-status">
+    <div class="task-status-title">📋 4개 버튼을 모두 눌러봐야 넘어갈 수 있어요!</div>
+    <div class="task-item" id="task-4-filtration"><div class="task-check">1</div> 🔵 여과 버튼 클릭</div>
+    <div class="task-item" id="task-4-reabsorption"><div class="task-check">2</div> 🟢 재흡수 버튼 클릭</div>
+    <div class="task-item" id="task-4-secretion"><div class="task-check">3</div> 🔴 분비 버튼 클릭</div>
+    <div class="task-item" id="task-4-all"><div class="task-check">4</div> 🌈 전체 과정 버튼 클릭</div>
+  </div>
+  <div class="complete-btn-wrap">
+    <button class="complete-btn btn-locked" id="complete-btn-4" onclick="tryComplete(4)">챕터 완료! 다음으로 💕 →</button>
+  </div>
+</div>
+
+<!-- ══ 5. 플래시카드 ══ -->
+<div class="section" id="tab-5">
+  <div class="card">
+    <div class="card-title">🃏 핵심 용어 플래시카드</div>
+    <p style="color:var(--muted);font-size:.88em;margin-bottom:14px;">카드를 <strong>모두 한 번씩 클릭</strong>하면 뒤집혀요! 앞: 용어 / 뒤: 설명 🌸</p>
+    <div class="fc-grid">
+      <div class="fc" id="fc-0"  onclick="flipCard(this,'fc-0')"><div class="fc-inner"><div class="fc-f">배설</div><div class="fc-b">노폐물을 몸 밖으로 내보내는 과정</div></div></div>
+      <div class="fc" id="fc-1"  onclick="flipCard(this,'fc-1')"><div class="fc-inner"><div class="fc-f">네프론</div><div class="fc-b">오줌 생성 기본 단위<br>토리+보먼주머니+세뇨관 🌸</div></div></div>
+      <div class="fc" id="fc-2"  onclick="flipCard(this,'fc-2')"><div class="fc-inner"><div class="fc-f">토리<br><small style="font-size:.75em;opacity:.85">(구 사구체)</small></div><div class="fc-b">모세혈관이 실뭉치처럼 뭉친 부분<br>여과가 일어남!</div></div></div>
+      <div class="fc" id="fc-3"  onclick="flipCard(this,'fc-3')"><div class="fc-inner"><div class="fc-f">보먼주머니</div><div class="fc-b">토리를 둘러싼 주머니<br>여과액이 모임</div></div></div>
+      <div class="fc" id="fc-4"  onclick="flipCard(this,'fc-4')"><div class="fc-inner"><div class="fc-f">세뇨관</div><div class="fc-b">보먼주머니와 연결된 긴 관<br>재흡수·분비가 일어남!</div></div></div>
+      <div class="fc" id="fc-5"  onclick="flipCard(this,'fc-5')"><div class="fc-inner"><div class="fc-f">여과</div><div class="fc-b">토리 → 보먼주머니<br>크기 작은 물질 이동</div></div></div>
+      <div class="fc" id="fc-6"  onclick="flipCard(this,'fc-6')"><div class="fc-inner"><div class="fc-f">재흡수</div><div class="fc-b">세뇨관 → 모세혈관<br>몸에 필요한 물질 회수</div></div></div>
+      <div class="fc" id="fc-7"  onclick="flipCard(this,'fc-7')"><div class="fc-inner"><div class="fc-f">분비</div><div class="fc-b">모세혈관 → 세뇨관<br>남은 노폐물 이동</div></div></div>
+      <div class="fc" id="fc-8"  onclick="flipCard(this,'fc-8')"><div class="fc-inner"><div class="fc-f">암모니아</div><div class="fc-b">단백질 분해 산물<br>독성↑ → 간에서 요소로 전환</div></div></div>
+      <div class="fc" id="fc-9"  onclick="flipCard(this,'fc-9')"><div class="fc-inner"><div class="fc-f">요소</div><div class="fc-b">암모니아 → 간에서 전환<br>오줌으로 배출!</div></div></div>
+      <div class="fc" id="fc-10" onclick="flipCard(this,'fc-10')"><div class="fc-inner"><div class="fc-f">오줌관</div><div class="fc-b">콩팥↔방광 연결<br>오줌 운반</div></div></div>
+      <div class="fc" id="fc-11" onclick="flipCard(this,'fc-11')"><div class="fc-inner"><div class="fc-f">요도</div><div class="fc-b">방광 → 몸 밖<br>오줌 배출 통로</div></div></div>
+    </div>
+    <div style="margin-top:10px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+      <button class="btn btn-ghost" onclick="resetAllCards()">🔄 전체 초기화</button>
+      <span id="fc-count-display" style="font-size:.9em;color:var(--pink-dark);">0 / 12 완료</span>
+    </div>
+  </div>
+  <div class="task-status">
+    <div class="task-status-title">📋 12개 카드를 모두 뒤집어야 넘어갈 수 있어요!</div>
+    <div class="task-item" id="task-5-cards"><div class="task-check">📋</div> <span id="task-5-cards-text">카드 뒤집기: 0 / 12</span></div>
+  </div>
+  <div class="complete-btn-wrap">
+    <button class="complete-btn btn-locked" id="complete-btn-5" onclick="tryComplete(5)">플래시카드 완료! 퀴즈 도전 💕 →</button>
+  </div>
+</div>
+
+<!-- ══ 6. 퀴즈 ══ -->
+<div class="section" id="tab-6">
+  <div class="card">
+    <div class="card-title">🩷 스티커 배치 퀴즈 — 기관 위치 맞히기!</div>
+    <div class="hl hl-pink"><p>스티커를 선택하고, 그림의 알맞은 위치(점선 부분)에 붙여봐요! 🌸</p></div>
+    <div class="sticker-palette">
+      <div class="sticker-item" id="stk-kidney"  onclick="selectSticker('kidney')"><span class="sticker-icon">🫘</span><span>콩팥</span></div>
+      <div class="sticker-item" id="stk-ureter"  onclick="selectSticker('ureter')"><span class="sticker-icon">〰️</span><span>오줌관</span></div>
+      <div class="sticker-item" id="stk-bladder" onclick="selectSticker('bladder')"><span class="sticker-icon">💛</span><span>방광</span></div>
+      <div class="sticker-item" id="stk-urethra" onclick="selectSticker('urethra')"><span class="sticker-icon">⬇️</span><span>요도</span></div>
+      <div class="sticker-item" id="stk-tori"    onclick="selectSticker('tori')"><span class="sticker-icon">🔵</span><span>토리</span></div>
+      <div class="sticker-item" id="stk-bowman"  onclick="selectSticker('bowman')"><span class="sticker-icon">💜</span><span>보먼주머니</span></div>
+      <div class="sticker-item" id="stk-tubule"  onclick="selectSticker('tubule')"><span class="sticker-icon">🟢</span><span>세뇨관</span></div>
+    </div>
+    <div class="sticker-area" id="stickerArea">
+      <svg id="stickerSvg" width="700" height="420" viewBox="0 0 700 420">
+        <rect width="700" height="420" fill="#fff5fb"/>
+        <ellipse cx="350" cy="65" rx="80" ry="55" fill="#fde8d8" stroke="#e2c0a8" stroke-width="2"/>
+        <text x="350" y="70" text-anchor="middle" font-size="14" font-family="Jua" fill="#92400e">상체</text>
+        <g class="drop-zone" onclick="dropSticker('kidney','dz-kidney-l')" id="dz-kidney-l" data-correct="kidney">
+          <ellipse cx="200" cy="185" rx="50" ry="65" fill="#fce7f3" stroke="#fbcfe8" stroke-width="2.5" stroke-dasharray="6,3"/>
+          <text x="200" y="182" text-anchor="middle" font-size="20" fill="#f9a8d4">?</text>
+          <text x="200" y="205" text-anchor="middle" font-size="11" font-family="Jua" fill="#f9a8d4">A</text>
+        </g>
+        <g class="drop-zone" onclick="dropSticker('kidney','dz-kidney-r')" id="dz-kidney-r" data-correct="kidney">
+          <ellipse cx="500" cy="185" rx="50" ry="65" fill="#fce7f3" stroke="#fbcfe8" stroke-width="2.5" stroke-dasharray="6,3"/>
+          <text x="500" y="182" text-anchor="middle" font-size="20" fill="#f9a8d4">?</text>
+          <text x="500" y="205" text-anchor="middle" font-size="11" font-family="Jua" fill="#f9a8d4">B</text>
+        </g>
+        <g class="drop-zone" onclick="dropSticker('ureter','dz-ureter-l')" id="dz-ureter-l" data-correct="ureter">
+          <path d="M200 250 Q230 310 280 345" fill="none" stroke="#e9d5ff" stroke-width="10" stroke-linecap="round" stroke-dasharray="8,4"/>
+          <text x="205" y="308" text-anchor="middle" font-size="11" font-family="Jua" fill="#a78bfa">C</text>
+        </g>
+        <g class="drop-zone" onclick="dropSticker('ureter','dz-ureter-r')" id="dz-ureter-r" data-correct="ureter">
+          <path d="M500 250 Q470 310 420 345" fill="none" stroke="#e9d5ff" stroke-width="10" stroke-linecap="round" stroke-dasharray="8,4"/>
+          <text x="490" y="308" text-anchor="middle" font-size="11" font-family="Jua" fill="#a78bfa">D</text>
+        </g>
+        <g class="drop-zone" onclick="dropSticker('bladder','dz-bladder')" id="dz-bladder" data-correct="bladder">
+          <ellipse cx="350" cy="355" rx="72" ry="50" fill="#fef3c7" stroke="#fde68a" stroke-width="2.5" stroke-dasharray="6,3"/>
+          <text x="350" y="352" text-anchor="middle" font-size="20" fill="#fbbf24">?</text>
+          <text x="350" y="378" text-anchor="middle" font-size="11" font-family="Jua" fill="#fbbf24">E</text>
+        </g>
+        <g class="drop-zone" onclick="dropSticker('urethra','dz-urethra')" id="dz-urethra" data-correct="urethra">
+          <rect x="320" y="408" width="60" height="10" rx="4" fill="#fee2e2" stroke="#fca5a5" stroke-width="1.5" stroke-dasharray="4,2"/>
+          <text x="350" y="422" text-anchor="middle" font-size="11" font-family="Jua" fill="#f87171">F</text>
+        </g>
+        <rect x="30" y="245" width="155" height="165" rx="14" fill="white" stroke="#fce7f3" stroke-width="2"/>
+        <text x="107" y="265" text-anchor="middle" font-size="11" font-family="Jua" fill="#be185d">네프론 확대</text>
+        <g class="drop-zone" onclick="dropSticker('tori','dz-tori')" id="dz-tori" data-correct="tori">
+          <circle cx="90" cy="310" r="28" fill="#fce7f3" stroke="#fbcfe8" stroke-width="2" stroke-dasharray="4,3"/>
+          <text x="90" y="307" text-anchor="middle" font-size="14" fill="#f9a8d4">?</text>
+          <text x="90" y="325" text-anchor="middle" font-size="9" font-family="Jua" fill="#f9a8d4">G</text>
+        </g>
+        <g class="drop-zone" onclick="dropSticker('bowman','dz-bowman')" id="dz-bowman" data-correct="bowman">
+          <circle cx="90" cy="310" r="42" fill="none" stroke="#e9d5ff" stroke-width="2.5" stroke-dasharray="5,3"/>
+          <text x="134" y="278" text-anchor="middle" font-size="9" font-family="Jua" fill="#a78bfa">H</text>
+        </g>
+        <g class="drop-zone" onclick="dropSticker('tubule','dz-tubule')" id="dz-tubule" data-correct="tubule">
+          <path d="M132 310 Q150 285 162 300 Q175 320 162 338 Q150 355 140 370" fill="none" stroke="#bbf7d0" stroke-width="8" stroke-linecap="round" stroke-dasharray="6,3"/>
+          <text x="170" y="365" text-anchor="middle" font-size="9" font-family="Jua" fill="#34d399">I</text>
+        </g>
+      </svg>
+    </div>
+    <div class="sticker-feedback" id="sticker-fb"></div>
+    <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn btn-green" onclick="checkStickers()">✅ 정답 확인!</button>
+      <button class="btn btn-ghost" onclick="resetStickers()">🔄 다시하기</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">📝 확인 문제 — 한 문제씩 풀어봐요!</div>
+    <div class="quiz-progress-dots" id="quizDots"></div>
+    <div id="quizWrap"></div>
+  </div>
+  <div class="task-status">
+    <div class="task-status-title">📋 완료해야 다음으로 갈 수 있어요!</div>
+    <div class="task-item" id="task-6-sticker"><div class="task-check">1</div> 🩷 스티커 정답 확인하기</div>
+    <div class="task-item" id="task-6-quiz"><div class="task-check">2</div> 📝 확인 문제 모두 풀기</div>
+  </div>
+  <div class="complete-btn-wrap" id="quiz-complete-wrap">
+    <button class="complete-btn btn-locked" id="complete-btn-6" onclick="tryComplete(6)">퀴즈 완료! 마무리하기 💕 →</button>
+  </div>
+</div>
+
+<!-- ══ 7. 마무리 ══ -->
+<div class="section" id="tab-7">
+  <div class="card">
+    <div class="card-title">✅ 학습 완료 체크리스트 🌸</div>
+    <p style="color:var(--muted);font-size:.88em;margin-bottom:14px;">오늘 학습한 내용을 스스로 점검해봐요! <strong>모두 체크해야 완료!</strong></p>
+    <ul class="cl" id="cl-list">
+      <li onclick="doCheck(this)"><input type="checkbox"> 노폐물의 종류(이산화탄소, 물, 암모니아)를 말할 수 있다.</li>
+      <li onclick="doCheck(this)"><input type="checkbox"> 암모니아가 간에서 요소로 전환됨을 설명할 수 있다.</li>
+      <li onclick="doCheck(this)"><input type="checkbox"> 각 노폐물의 배출 경로를 설명할 수 있다.</li>
+      <li onclick="doCheck(this)"><input type="checkbox"> 배설계를 구성하는 4가지 기관을 순서대로 말할 수 있다.</li>
+      <li onclick="doCheck(this)"><input type="checkbox"> 네프론의 3가지 구조(토리·보먼주머니·세뇨관)와 기능을 설명할 수 있다.</li>
+      <li onclick="doCheck(this)"><input type="checkbox"> 여과의 위치(토리→보먼주머니)와 이동하는 물질을 말할 수 있다.</li>
+      <li onclick="doCheck(this)"><input type="checkbox"> 재흡수의 위치와 이동하는 물질을 말할 수 있다.</li>
+      <li onclick="doCheck(this)"><input type="checkbox"> 분비의 위치와 이동하는 물질을 말할 수 있다.</li>
+      <li onclick="doCheck(this)"><input type="checkbox"> 오줌에서 포도당 검출 시 어느 과정의 문제인지 설명할 수 있다.</li>
+    </ul>
+    <div id="cl-result" style="margin-top:14px;"></div>
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<div class="congrats-overlay" id="congratsOverlay">
+  <div class="congrats-box">
+    <div class="congrats-emoji" id="congratsEmoji">🎉</div>
+    <h2 id="congratsTitle">챕터 완료!</h2>
+    <p id="congratsMsg">수고했어요! 💕</p>
+    <button class="btn btn-pink" onclick="closeCongratsAndNext()">다음 챕터 가기 →</button>
+    <button class="btn btn-ghost" style="margin-top:6px;display:block;width:100%;" onclick="document.getElementById('congratsOverlay').classList.remove('show')">계속 복습하기</button>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <p>🫘 배설계 자기주도 학습 자료 | 2학년 과학</p>
+  <div class="made-by">🩷 Made by 소연티쳐 🩷</div>
+</footer>
+
+<!-- ══ 결과 제출 카드 ══ -->
+<div class="submit-card">
+  <div class="submit-inner">
+    <div class="card-title">📤 선생님께 결과 제출하기</div>
+    <div class="submit-info-box">
+      👤 이름: <strong id="res-name" style="color:var(--pink-dark);">-</strong> &nbsp;|&nbsp;
+      🏫 반/번호: <strong id="res-class" style="color:var(--pink-dark);">-</strong><br>
+      📝 퀴즈 점수: <strong id="res-score" style="color:var(--pink-dark);">미완료</strong>
+    </div>
+    <p style="font-size:.9em;color:var(--muted);margin-bottom:16px;line-height:1.7;">
+      학습을 마친 후 아래 버튼을 눌러 결과를 제출해주세요! 🌸
+    </p>
+    <button class="submit-btn-main" id="submitBtn" onclick="submitResult()">
+      📤 선생님께 결과 제출하기
+    </button>
+    <div class="submit-done-box" id="submitDone">
+      <div style="font-size:2.5rem;margin-bottom:8px;">✅</div>
+      <div style="font-size:1.1em;color:#059669;margin-bottom:5px;font-weight:bold;">제출 완료!</div>
+      <div style="font-size:.9em;color:var(--muted);">선생님께 결과가 전달되었어요 🌸<br>수고했어요!</div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /mainApp -->
+
+<script>
+/* ══ 로그인 & 제출 스크립트 ══ */
+var _student   = {cls:'', num:'', name:''};
+var _startTime = null;
+var _quizScore = '미완료';   /* ★ 추가: 퀴즈 점수 저장 변수 */
+
+function doLogin() {
+  var cls  = document.getElementById('inp-class').value.trim();
+  var num  = document.getElementById('inp-num').value.trim();
+  var name = document.getElementById('inp-name').value.trim();
+  var err  = document.getElementById('loginErr');
+  if (!cls || !num || !name) {
+    err.style.display = 'block';
+    if (!cls)  document.getElementById('inp-class').classList.add('err');
+    if (!num)  document.getElementById('inp-num').classList.add('err');
+    if (!name) document.getElementById('inp-name').classList.add('err');
+    return;
+  }
+  err.style.display = 'none';
+  _student   = {cls:cls, num:num, name:name};
+  _startTime = new Date();
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('mainApp').style.display     = 'block';
+  var badge = document.getElementById('studentBadge');
+  badge.textContent    = '👤 ' + cls + '반 ' + num + '번 ' + name;
+  badge.style.display  = 'inline-block';
+  document.getElementById('res-name').textContent  = name;
+  document.getElementById('res-class').textContent = cls + '반 ' + num + '번';
+}
+
+function _calcTime() {
+  if (!_startTime) return '-';
+  var diff = Math.floor((new Date() - _startTime) / 1000);
+  return Math.floor(diff / 60) + '분 ' + (diff % 60) + '초';
+}
+
+function submitResult() {
+  /* ★ 제출 직전 res-score도 최신 값으로 업데이트 */
+  document.getElementById('res-score').textContent = _quizScore;
+
+  var btn = document.getElementById('submitBtn');
+  btn.disabled    = true;
+  btn.textContent = '⏳ 제출 중...';
+
+  /* ★ 아래 URL과 entry 번호를 구글 폼 정보로 교체해주세요 */
+  var FORM_URL = 'https://docs.google.com/forms/u/0/d/e/1FAIpQLSc8N7LyLEChkBJAlTzRf6JQZ9lDEA8VKnjPI7IbNHQpEnD_HQ/formResponse';
+  var ENTRIES  = {
+    cls:   'entry.308517414',   /* 반 */
+    num:   'entry.457152740',   /* 번호 */
+    name:  'entry.1225439561',   /* 이름 */
+    score: 'entry.1395493222',   /* ★ 퀴즈 점수 */
+    time:  'entry.2099570554'    /* 학습 시간 */
+  };
+
+  var body =
+    encodeURIComponent(ENTRIES.cls)   + '=' + encodeURIComponent(_student.cls)   + '&' +
+    encodeURIComponent(ENTRIES.num)   + '=' + encodeURIComponent(_student.num)   + '&' +
+    encodeURIComponent(ENTRIES.name)  + '=' + encodeURIComponent(_student.name)  + '&' +
+    encodeURIComponent(ENTRIES.score) + '=' + encodeURIComponent(_quizScore)     + '&' +  /* ★ 추가 */
+    encodeURIComponent(ENTRIES.time)  + '=' + encodeURIComponent(_calcTime());
+
+  fetch(FORM_URL, {
+    method:  'POST',
+    mode:    'no-cors',
+    headers: {'Content-Type':'application/x-www-form-urlencoded'},
+    body:    body
+  }).then(function() {
+    _showSubmitDone();
+  }).catch(function() {
+    _showSubmitDone();
+  });
+}
+
+function _showSubmitDone() {
+  document.getElementById('submitBtn').style.display  = 'none';
+  document.getElementById('submitDone').style.display = 'block';
+}
+</script>
+
+<script>
+/* ══ 기존 메인 스크립트 ══ */
+const TOTAL = 8;
+let unlockedUpTo = 0, currentChapter = 0, nextAfterCongrats = 1;
+const CHAPTER_TASKS = {
+  0: ['hint'],
+  1: ['step-carb','step-prot','step-path','blank'],
+  2: ['organ','step-k','step-u','step-b','step-ur'],
+  3: ['svg-tori','svg-bowman','svg-tubule','svg-cap','step-n1','step-n2','step-n3'],
+  4: ['filtration','reabsorption','secretion','all'],
+  5: ['cards'],
+  6: ['sticker','quiz'],
+  7: [],
+};
+const completedTasks = {};
+for (let i = 0; i < TOTAL; i++) completedTasks[i] = new Set();
+let flippedCards = new Set();
+const TOTAL_CARDS = 12;
+function markTask(chapterIdx, taskKey) {
+  completedTasks[chapterIdx].add(taskKey);
+  const el = document.getElementById(`task-${chapterIdx}-${taskKey}`);
+  if (el) el.classList.add('done');
+  checkAllTasks(chapterIdx);
+}
+function checkAllTasks(chapterIdx) {
+  const required = CHAPTER_TASKS[chapterIdx];
+  if (!required) return;
+  let allDone = chapterIdx === 5
+    ? (flippedCards.size >= TOTAL_CARDS)
+    : required.every(t => completedTasks[chapterIdx].has(t));
+  const btn = document.getElementById(`complete-btn-${chapterIdx}`);
+  if (btn) btn.classList.toggle('btn-locked', !allDone);
+}
+function tryComplete(idx) {
+  const required = CHAPTER_TASKS[idx];
+  let allDone = idx === 5
+    ? (flippedCards.size >= TOTAL_CARDS)
+    : (required ? required.every(t => completedTasks[idx].has(t)) : true);
+  if (!allDone) {
+    let missing = [];
+    if (idx === 5) {
+      missing.push(`카드 ${TOTAL_CARDS - flippedCards.size}개 더 뒤집기`);
+    } else {
+      required.forEach(t => {
+        if (!completedTasks[idx].has(t)) {
+          const el = document.getElementById(`task-${idx}-${t}`);
+          if (el) missing.push(el.textContent.trim().replace(/^[0-9]+\s*/,''));
+        }
+      });
+    }
+    showToast('🔒 아직 안 한 활동이 있어요! ' + (missing[0] || '') + ' 💕');
+    return;
+  }
+  completeChapter(idx);
+}
+function completeChapter(idx) {
+  if (idx >= unlockedUpTo) { unlockedUpTo = idx + 1; unlockBtn(idx + 1); }
+  nextAfterCongrats = idx + 1;
+  if (idx + 1 < TOTAL) showCongrats(idx);
+  else showFinalCongrats();
+  updateProg();
+}
+function goChapter(idx) {
+  if (idx > unlockedUpTo) { showToast('🔒 이전 챕터를 먼저 완료해주세요! 💕'); return; }
+  currentChapter = idx;
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.ch-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + idx).classList.add('active');
+  document.getElementById('ch-btn-' + idx).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (idx === 4) initCanvas();
+  if (idx === 6) initQuiz();
+  updateProg();
+}
+function unlockBtn(idx) {
+  if (idx >= TOTAL) return;
+  const btn = document.getElementById('ch-btn-' + idx);
+  if (!btn) return;
+  btn.classList.remove('locked');
+  btn.textContent = btn.textContent.replace('🔒 ', '');
+}
+const congratsMsgs = [
+  ['🌟','학습 목표 확인 완료!','이제 노폐물에 대해 알아봐요 💕'],
+  ['💧','노폐물 챕터 완료!','배설계 구조를 공부해봐요 🫘'],
+  ['🫘','배설계 구조 완료!','네프론을 자세히 들여다봐요 🔬'],
+  ['🔬','네프론 챕터 완료!','물질이 어떻게 이동하는지 봐봐요 🎬'],
+  ['🎬','애니메이션 챕터 완료!','핵심 용어를 플래시카드로 외워봐요 🃏'],
+  ['🃏','플래시카드 완료!','이제 퀴즈에 도전해봐요! ✏️'],
+  ['✏️','퀴즈 완료!','마지막으로 스스로 점검해봐요 ✅'],
+];
+function showCongrats(idx) {
+  const m = congratsMsgs[idx] || ['🎉','챕터 완료!','수고했어요!'];
+  document.getElementById('congratsEmoji').textContent = m[0];
+  document.getElementById('congratsTitle').textContent = m[1];
+  document.getElementById('congratsMsg').textContent   = m[2];
+  document.getElementById('congratsOverlay').classList.add('show');
+}
+function showFinalCongrats() {
+  document.getElementById('congratsEmoji').textContent = '🏆';
+  document.getElementById('congratsTitle').textContent = '모든 챕터 완료!';
+  document.getElementById('congratsMsg').textContent   = '배설계 마스터! 정말 수고했어요 🩷✨';
+  document.getElementById('congratsOverlay').classList.add('show');
+}
+function closeCongratsAndNext() {
+  document.getElementById('congratsOverlay').classList.remove('show');
+  if (nextAfterCongrats < TOTAL) goChapter(nextAfterCongrats);
+}
+function updateProg() {
+  const pct = Math.round((unlockedUpTo / TOTAL) * 100);
+  document.getElementById('pFill').style.width = pct + '%';
+  document.getElementById('progPct').textContent = pct + '%';
+}
+let toastTimer = null;
+function showToast(msg) {
+  const t = document.getElementById('lockToast');
+  t.textContent = msg; t.classList.add('show');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+}
+function toggleEl(id) { const e = document.getElementById(id); e.style.display = e.style.display === 'none' ? 'block' : 'none'; }
+function toggleStep(id) { document.getElementById(id).classList.toggle('revealed'); }
+const organData = {
+  kidney:  '🫘 <strong>콩팥</strong>: 혈액 속 노폐물을 걸러 오줌을 만드는 기관. 등 쪽 허리 좌우 한 쌍!',
+  ureter:  '〰️ <strong>오줌관</strong>: 콩팥과 방광을 연결하는 긴 관. 오줌 운반!',
+  bladder: '💛 <strong>방광</strong>: 오줌을 일시적으로 모아두는 기관.',
+  urethra: '⬇️ <strong>요도</strong>: 방광의 오줌을 몸 밖으로 내보내는 통로.'
+};
+const nephronData = {
+  tori:      '🩷 <strong>토리</strong> (구 사구체): 모세혈관이 실뭉치처럼 뭉친 부분. <strong>여과</strong>가 일어나요!',
+  bowman:    '💜 <strong>보먼주머니</strong>: 토리를 둘러싼 주머니. 여과액이 모여요.',
+  tubule:    '💚 <strong>세뇨관</strong>: 보먼주머니와 연결된 긴 관. <strong>재흡수·분비</strong>가 일어나요!',
+  capillary: '💛 <strong>모세혈관</strong>: 세뇨관을 둘러싼 혈관. 재흡수·분비를 담당해요.'
+};
+function showOrgan(key) {
+  const el = document.getElementById('organ-info');
+  el.style.display = 'block'; el.innerHTML = organData[key];
+  markTask(2, 'organ');
+}
+function showNephronPart(key) {
+  const el = document.getElementById('nephron-info');
+  el.style.display = 'block'; el.innerHTML = nephronData[key];
+}
+function chkBlanks1() {
+  const ids = ['bw1','bw2','bw3'];
+  let ok = 0;
+  ids.forEach(id => {
+    const i = document.getElementById(id);
+    if (i.value.trim() === i.dataset.ans) { i.className = 'blank ok'; ok++; }
+    else i.className = 'blank err';
+  });
+  document.getElementById('rw1').classList.add('show');
+  document.getElementById('sw1').textContent = ok + '/3 정답 🌸';
+  document.getElementById('mw1').textContent = ['다시 도전! 💪','조금 더! 🔥','거의! 😊','완벽해요! 🎉'][ok];
+  if (ok === 3) markTask(1, 'blank');
+}
+function rstBlanks(ids, rId) {
+  ids.forEach(id => { const i = document.getElementById(id); i.value = ''; i.className = 'blank'; });
+  document.getElementById(rId).classList.remove('show');
+}
+function flipCard(el, id) {
+  el.classList.toggle('flipped');
+  if (el.classList.contains('flipped')) flippedCards.add(id);
+  document.getElementById('fc-count-display').textContent = `${flippedCards.size} / ${TOTAL_CARDS} 완료`;
+  const taskEl = document.getElementById('task-5-cards-text');
+  if (taskEl) taskEl.textContent = `카드 뒤집기: ${flippedCards.size} / ${TOTAL_CARDS}`;
+  if (flippedCards.size >= TOTAL_CARDS) {
+    markTask(5, 'cards');
+    const taskItem = document.getElementById('task-5-cards');
+    if (taskItem) taskItem.classList.add('done');
+  }
+  checkAllTasks(5);
+}
+function resetAllCards() {
+  document.querySelectorAll('.fc').forEach(f => f.classList.remove('flipped'));
+  flippedCards.clear();
+  completedTasks[5].delete('cards');
+  document.getElementById('fc-count-display').textContent = `0 / ${TOTAL_CARDS} 완료`;
+  const taskEl = document.getElementById('task-5-cards-text');
+  if (taskEl) taskEl.textContent = `카드 뒤집기: 0 / ${TOTAL_CARDS}`;
+  const taskItem = document.getElementById('task-5-cards');
+  if (taskItem) taskItem.classList.remove('done');
+  checkAllTasks(5);
+}
+let selectedSticker = null;
+const placedStickers = {};
+const stickerEmoji = { kidney:'🫘', ureter:'〰️', bladder:'💛', urethra:'⬇️', tori:'🔵', bowman:'💜', tubule:'🟢' };
+const dzPositions = {
+  'dz-kidney-l':{x:200,y:185},'dz-kidney-r':{x:500,y:185},
+  'dz-ureter-l':{x:210,y:298},'dz-ureter-r':{x:482,y:298},
+  'dz-bladder':{x:350,y:355},'dz-urethra':{x:350,y:412},
+  'dz-tori':{x:90,y:310},'dz-bowman':{x:90,y:276},'dz-tubule':{x:160,y:355}
+};
+const dzCorrect = {
+  'dz-kidney-l':'kidney','dz-kidney-r':'kidney',
+  'dz-ureter-l':'ureter','dz-ureter-r':'ureter',
+  'dz-bladder':'bladder','dz-urethra':'urethra',
+  'dz-tori':'tori','dz-bowman':'bowman','dz-tubule':'tubule'
+};
+function selectSticker(type) {
+  selectedSticker = type;
+  document.querySelectorAll('.sticker-item').forEach(el => el.classList.remove('selected-sticker'));
+  document.getElementById('stk-' + type).classList.add('selected-sticker');
+}
+function dropSticker(type, dzId) {
+  if (!selectedSticker) {
+    const fb = document.getElementById('sticker-fb');
+    fb.textContent = '🌸 먼저 위에서 스티커를 선택해주세요!';
+    fb.className = 'sticker-feedback partial show'; return;
+  }
+  placedStickers[dzId] = selectedSticker;
+  renderPlacedSticker(dzId, selectedSticker);
+  selectedSticker = null;
+  document.querySelectorAll('.sticker-item').forEach(el => el.classList.remove('selected-sticker'));
+}
+function renderPlacedSticker(dzId, type) {
+  const svg = document.getElementById('stickerSvg');
+  const old = document.getElementById('placed-' + dzId); if (old) old.remove();
+  const pos = dzPositions[dzId]; if (!pos) return;
+  const g = document.createElementNS('http://www.w3.org/2000/svg','g');
+  g.id = 'placed-' + dzId; g.setAttribute('class','placed-sticker');
+  const t = document.createElementNS('http://www.w3.org/2000/svg','text');
+  t.setAttribute('x', pos.x); t.setAttribute('y', pos.y + 8);
+  t.setAttribute('text-anchor','middle'); t.setAttribute('font-size','26');
+  t.textContent = stickerEmoji[type] || '?'; g.appendChild(t); svg.appendChild(g);
+}
+function checkStickers() {
+  let total = Object.keys(dzCorrect).length, correct = 0;
+  Object.entries(dzCorrect).forEach(([dzId, ct]) => {
+    const placed = placedStickers[dzId];
+    const g = document.getElementById('placed-' + dzId);
+    if (placed === ct) { correct++; if (g) g.querySelector('text').setAttribute('fill','#34d399'); }
+    else if (g) g.querySelector('text').setAttribute('fill','#f87171');
+  });
+  const fb = document.getElementById('sticker-fb');
+  fb.className = 'sticker-feedback show ' + (correct === total ? 'all-correct' : 'partial');
+  fb.textContent = correct === total
+    ? `🎉 완벽해요! ${correct}/${total} 모두 정답! 정말 잘했어요 🌸`
+    : `💪 ${correct}/${total} 정답! 빨간색 스티커를 다시 확인해봐요 🌸`;
+  markTask(6, 'sticker');
+}
+function resetStickers() {
+  Object.keys(placedStickers).forEach(k => delete placedStickers[k]);
+  document.querySelectorAll('.placed-sticker').forEach(el => el.remove());
+  document.getElementById('sticker-fb').className = 'sticker-feedback';
+  selectedSticker = null;
+  document.querySelectorAll('.sticker-item').forEach(el => el.classList.remove('selected-sticker'));
+}
+const QUESTIONS = [
+  {q:'1. 오줌 생성 과정의 순서로 옳은 것은?',opts:['① 재흡수→여과→분비','② 여과→재흡수→분비','③ 여과→분비→재흡수','④ 분비→여과→재흡수'],ans:1,exp:'오줌은 <strong>여과 → 재흡수 → 분비</strong> 순서로 만들어져요! 🌸'},
+  {q:'2. 건강한 사람의 오줌에 포함된 물질은?',opts:['① 포도당','② 단백질','③ 요소','④ 혈구'],ans:2,exp:'<strong>요소</strong>는 노폐물이라 재흡수되지 않고 오줌으로 배출돼요! 🌸'},
+  {q:'3. 오줌 생성의 기본 단위로 토리·보먼주머니·세뇨관으로 구성된 것은?',opts:['① 방광','② 오줌관','③ 네프론','④ 요도'],ans:2,exp:'<strong>네프론</strong>이 오줌 생성의 기본 단위예요! 🔬'},
+  {q:'4. 여과가 일어나는 경로는?',opts:['① 세뇨관→모세혈관','② 모세혈관→세뇨관','③ 토리→보먼주머니','④ 보먼주머니→토리'],ans:2,exp:'여과는 <strong>토리 → 보먼주머니</strong> 방향으로 크기가 작은 물질이 이동해요 🔵'},
+  {q:'5. 오줌에서 포도당이 검출됐을 때 이상이 있는 과정은?',opts:['① 여과','② 재흡수','③ 분비','④ 배설'],ans:1,exp:'포도당은 세뇨관에서 100% <strong>재흡수</strong>돼야 해요! 오줌에서 나왔다면 재흡수 문제예요 🏥'},
+  {q:'6. 암모니아에 대한 설명으로 옳은 것은?',opts:['① 탄수화물 분해 시 만들어진다','② 독성이 약하다','③ 간에서 요소로 전환된다','④ 날숨으로 배출된다'],ans:2,exp:'암모니아는 <strong>단백질</strong> 분해 시 생성! <strong>간</strong>에서 <strong>요소</strong>로 전환돼요 🌸'},
+  {q:'7. 토리에서 여과되지 않는 물질로만 묶인 것은?',opts:['① 물, 포도당','② 요소, 아미노산','③ 단백질, 혈구','④ 물, 요소'],ans:2,exp:'<strong>단백질</strong>과 <strong>혈구</strong>는 크기가 커서 여과 안 돼요! 🌸'},
+];
+let curQ = 0, quizResults = [], quizAnswered = false, quizInited = false;
+function initQuiz() {
+  if (quizInited) return;
+  quizInited = true; curQ = 0; quizResults = []; quizAnswered = false;
+  renderQuiz();
+}
+function renderQuiz() {
+  renderDots();
+  if (curQ >= QUESTIONS.length) { showQuizResult(); return; }
+  const q = QUESTIONS[curQ]; quizAnswered = false;
+  document.getElementById('quizWrap').innerHTML = `
+    <div class="quiz-q-display">
+      <div class="quiz-q-num">문제 ${curQ+1} / ${QUESTIONS.length} 🌸</div>
+      <div class="quiz-q-text">${q.q}</div>
+      <div class="quiz-opts" id="quizOpts">
+        ${q.opts.map((o,i) => `<button class="quiz-opt" onclick="answerQuiz(${i})">${o}</button>`).join('')}
+      </div>
+    </div>
+    <div class="explanation-box" id="expBox">
+      <div class="exp-title" id="expTitle"></div>
+      <div class="exp-text"  id="expText"></div>
+    </div>
+    <div id="nextBtnWrap" style="text-align:center;margin-top:12px;display:none;">
+      <button class="btn btn-pink" onclick="nextQuiz()">
+        ${curQ+1 < QUESTIONS.length ? '다음 문제 →' : '결과 보기 🎉'}
+      </button>
+    </div>`;
+}
+function answerQuiz(idx) {
+  if (quizAnswered) return; quizAnswered = true;
+  const q = QUESTIONS[curQ], correct = idx === q.ans;
+  quizResults.push(correct);
+  document.querySelectorAll('.quiz-opt').forEach((o, i) => {
+    o.disabled = true; o.style.cursor = 'default';
+    if (i === q.ans) o.classList.add('right');
+    else if (i === idx && !correct) o.classList.add('wrong');
+  });
+  const box = document.getElementById('expBox');
+  box.className = 'explanation-box show ' + (correct ? 'correct-exp' : 'wrong-exp');
+  document.getElementById('expTitle').textContent = correct ? '✅ 정답이에요! 🎉' : '❌ 아쉬워요!';
+  document.getElementById('expText').innerHTML = q.exp;
+  document.getElementById('nextBtnWrap').style.display = 'block';
+  renderDots();
+}
+function nextQuiz() { curQ++; renderQuiz(); }
+function renderDots() {
+  document.getElementById('quizDots').innerHTML = QUESTIONS.map((_, i) => {
+    let c = 'q-dot';
+    if (i < quizResults.length) c += quizResults[i] ? ' done-correct' : ' done-wrong';
+    else if (i === curQ) c += ' current';
+    return `<div class="${c}"></div>`;
+  }).join('');
+}
+function showQuizResult() {
+  const correct = quizResults.filter(Boolean).length, total = QUESTIONS.length;
+  const pct = Math.round(correct / total * 100);
+
+  /* ★ 수정: 퀴즈 점수 전역 변수에 저장 + 제출 카드에도 즉시 반영 */
+  _quizScore = correct + '/' + total + ' (' + pct + '%)';
+  document.getElementById('res-score').textContent = _quizScore;
+
+  const msgs = ['더 열심히 복습해봐요! 💪','조금만 더! 🔥','절반 이상! 😊','잘 하고 있어요! 👍','거의 완벽! 🌟','완벽해요! 🎉'];
+  document.getElementById('quizWrap').innerHTML = `
+    <div style="text-align:center;padding:24px 0;">
+      <div style="font-size:3em;margin-bottom:12px;">${pct===100?'🏆':pct>=80?'🌟':pct>=60?'😊':'💪'}</div>
+      <div style="font-size:1.8em;color:var(--pink-dark);margin-bottom:8px;">${correct} / ${total} 정답!</div>
+      <div style="color:var(--muted);margin-bottom:18px;">${msgs[Math.floor(pct/20)]||msgs[5]}</div>
+      <button class="btn btn-ghost" onclick="restartQuiz()">🔄 다시 풀기</button>
+    </div>`;
+  markTask(6, 'quiz');
+}
+function restartQuiz() {
+  curQ = 0; quizResults = []; quizAnswered = false; quizInited = false;
+  initQuiz();
+}
+function doCheck(li) {
+  const cb = li.querySelector('input'); cb.checked = !cb.checked; li.classList.toggle('done', cb.checked);
+  const total = document.querySelectorAll('#cl-list li').length;
+  const done  = document.querySelectorAll('#cl-list li.done').length;
+  const rd = document.getElementById('cl-result');
+  if (done === total) {
+    rd.innerHTML = '<div class="hl hl-green" style="text-align:center"><strong>🎉🌸 모든 학습 목표 달성! 수고했어요! 🌸🎉</strong></div>';
+    completeChapter(7);
+  } else {
+    rd.innerHTML = `<div class="hl hl-pink"><strong>${done}/${total} 완료</strong> — 계속 학습해봐요! 💕</div>`;
+  }
+}
+function runPhase(phase) {
+  markTask(4, phase);
+  document.getElementById('btn-' + phase).classList.add('phase-done');
+  stopAnim(); particles = []; currentPhase = phase;
+  document.querySelectorAll('.phase-btn').forEach(b => b.classList.remove('active-phase'));
+  document.getElementById('btn-' + phase).classList.add('active-phase');
+  document.querySelectorAll('.phase-info-panel').forEach(p => p.classList.remove('show'));
+  document.getElementById('panel-' + phase).classList.add('show');
+  spawnBgFlow();
+  if (phase==='filtration')        addFilterBatch(false);
+  else if (phase==='reabsorption') addReabBatch(false);
+  else if (phase==='secretion')    addSecBatch(false);
+  else if (phase==='all')          addAllBatch(false);
+  animate();
+}
+let canvas, ctx, animId = null, particles = [], currentPhase = null, canvasInited = false;
+const W = 860, H = 480;
+const TUBULE_PATH = [
+  {x:300,y:200},{x:345,y:218},{x:392,y:192},{x:442,y:218},
+  {x:462,y:268},{x:432,y:318},{x:382,y:338},{x:342,y:358},{x:312,y:390},{x:312,y:428}
+];
+const MATERIALS = {
+  water:   {name:'물',      color:'#60a5fa', shape:'circle',   size:9},
+  glucose: {name:'포도당',  color:'#34d399', shape:'square',   size:10},
+  amino:   {name:'아미노산',color:'#fbbf24', shape:'triangle', size:11},
+  urea:    {name:'요소',    color:'#f472b6', shape:'pentagon', size:10},
+  protein: {name:'단백질',  color:'#f87171', shape:'diamond',  size:13},
+  rbc:     {name:'혈구',    color:'#a78bfa', shape:'ellipse',  size:14},
+};
+const PATHS = {
+  blood_in:    {pts:[{x:108,y:192},{x:140,y:196},{x:165,y:198},{x:185,y:199},{x:195,y:200}],loop:false},
+  filtration:  {pts:[{x:220,y:185},{x:252,y:180},{x:282,y:192},{x:300,y:200}],loop:false},
+  tubule_flow: {pts:TUBULE_PATH,loop:false},
+  reabsorption:{pts:[{x:435,y:268},{x:462,y:262},{x:492,y:254},{x:522,y:249},{x:550,y:247}],loop:false},
+  secretion:   {pts:[{x:532,y:298},{x:502,y:304},{x:472,y:310},{x:442,y:318},{x:416,y:325}],loop:false},
+  urine_out:   {pts:[{x:312,y:428},{x:322,y:452},{x:332,y:466}],loop:false},
+  blood_out:   {pts:[{x:602,y:278},{x:632,y:348},{x:646,y:388},{x:656,y:412}],loop:false},
+  blood_vessel:{pts:[{x:108,y:175},{x:155,y:162},{x:200,y:168},{x:195,y:200},{x:170,y:222},{x:130,y:218},{x:108,y:195}],loop:true},
+  cap_flow:    {pts:[{x:490,y:165},{x:600,y:162},{x:710,y:168},{x:720,y:250},{x:710,y:330},{x:600,y:335},{x:490,y:330},{x:480,y:250},{x:490,y:165}],loop:true},
+};
+class Particle {
+  constructor(type, pathKey, delay, speedMult) {
+    this.type=type; this.mat=MATERIALS[type]; this.pathKey=pathKey;
+    this.pathDef=PATHS[pathKey]; this.delay=delay||0;
+    this.speed=(0.004+Math.random()*0.003)*(speedMult||1);
+    this.t=0; this.done=false; this.alpha=0; this.pulse=Math.random()*Math.PI*2;
+    this.loop=this.pathDef.loop;
+  }
+  getPos() {
+    const pts=this.pathDef.pts; if(pts.length<2)return pts[0];
+    const seg=this.t*(pts.length-1); const i=Math.min(Math.floor(seg),pts.length-2);
+    const f=seg-i; const a=pts[i],b=pts[i+1];
+    return{x:a.x+(b.x-a.x)*f,y:a.y+(b.y-a.y)*f};
+  }
+  update() {
+    if(this.delay>0){this.delay--;return;}
+    this.alpha=Math.min(1,this.alpha+0.07); this.pulse+=0.09; this.t+=this.speed;
+    if(this.t>=1){if(this.loop)this.t=0;else{this.t=1;this.done=true;}}
+  }
+  draw(c) {
+    if(this.delay>0||this.alpha<=0)return;
+    const pos=this.getPos(),m=this.mat,s=m.size+Math.sin(this.pulse)*1.4;
+    c.save(); c.globalAlpha=this.alpha*(this.done?0.35:1);
+    c.translate(pos.x,pos.y); c.shadowColor=m.color; c.shadowBlur=10;
+    c.fillStyle=m.color; c.strokeStyle='rgba(255,255,255,0.55)'; c.lineWidth=1.5;
+    switch(m.shape){
+      case 'circle':   c.beginPath();c.arc(0,0,s,0,Math.PI*2);c.fill();c.stroke();break;
+      case 'square':   c.beginPath();c.rect(-s,-s,s*2,s*2);c.fill();c.stroke();break;
+      case 'triangle': c.beginPath();c.moveTo(0,-s*1.2);c.lineTo(s*1.1,s*.8);c.lineTo(-s*1.1,s*.8);c.closePath();c.fill();c.stroke();break;
+      case 'pentagon': {c.beginPath();for(let i=0;i<5;i++){const a=Math.PI*2/5*i-Math.PI/2;i?c.lineTo(Math.cos(a)*s,Math.sin(a)*s):c.moveTo(Math.cos(a)*s,Math.sin(a)*s);}c.closePath();c.fill();c.stroke();break;}
+      case 'diamond':  c.beginPath();c.moveTo(0,-s*1.3);c.lineTo(s*.9,0);c.lineTo(0,s*1.3);c.lineTo(-s*.9,0);c.closePath();c.fill();c.stroke();break;
+      case 'ellipse':  c.beginPath();c.ellipse(0,0,s*1.4,s*.8,0,0,Math.PI*2);c.fill();c.stroke();break;
+    }
+    c.restore();
+  }
+}
+function drawBG() {
+  ctx.fillStyle='#0d1b2a'; ctx.fillRect(0,0,W,H);
+  rrect(ctx,15,168,92,48,10,'#7f1d1d','#ef4444',2);
+  ctx.fillStyle='#fca5a5';ctx.font='bold 12px Jua,sans-serif';ctx.textAlign='center';
+  ctx.fillText('콩팥동맥',61,190);ctx.fillStyle='#fecaca';ctx.font='10px Jua,sans-serif';ctx.fillText('노폐물 多',61,205);
+  ctx.save();ctx.shadowColor='#f472b6';ctx.shadowBlur=22;
+  ctx.beginPath();ctx.ellipse(195,200,74,64,0,0,Math.PI*2);
+  ctx.fillStyle='#1e1028';ctx.fill();ctx.strokeStyle='#f472b6';ctx.lineWidth=2.5;ctx.stroke();ctx.restore();
+  for(let i=0;i<4;i++){ctx.strokeStyle='rgba(244,114,182,0.45)';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(155,176+i*12);ctx.bezierCurveTo(170,166+i*12,185,186+i*12,200,176+i*12);ctx.bezierCurveTo(215,166+i*12,229,184+i*12,236,176+i*12);ctx.stroke();}
+  ctx.fillStyle='#f9a8d4';ctx.font='bold 12px Jua,sans-serif';ctx.textAlign='center';ctx.fillText('토리',195,274);
+  ctx.fillStyle='#fbcfe8';ctx.font='10px Jua,sans-serif';ctx.fillText('(구 사구체)',195,288);
+  ctx.save();ctx.shadowColor='#a78bfa';ctx.shadowBlur=14;
+  ctx.beginPath();ctx.ellipse(195,200,110,100,0,0,Math.PI*2);
+  ctx.strokeStyle='#a78bfa';ctx.lineWidth=2;ctx.setLineDash([6,4]);ctx.stroke();ctx.setLineDash([]);ctx.restore();
+  ctx.fillStyle='#c4b5fd';ctx.font='bold 11px Jua,sans-serif';ctx.fillText('보먼주머니',195,108);
+  ctx.save();ctx.shadowColor='#34d399';ctx.shadowBlur=16;
+  ctx.beginPath();ctx.moveTo(TUBULE_PATH[0].x,TUBULE_PATH[0].y);
+  for(let i=1;i<TUBULE_PATH.length;i++){const p=TUBULE_PATH[i-1],c2=TUBULE_PATH[i];ctx.quadraticCurveTo(p.x,p.y,(p.x+c2.x)/2,(p.y+c2.y)/2);}
+  ctx.strokeStyle='#34d399';ctx.lineWidth=18;ctx.lineCap='round';ctx.stroke();
+  ctx.strokeStyle='#052e16';ctx.lineWidth=12;ctx.stroke();ctx.restore();
+  ctx.fillStyle='#6ee7b7';ctx.font='bold 12px Jua,sans-serif';ctx.textAlign='left';ctx.fillText('세뇨관',348,228);
+  ctx.save();ctx.shadowColor='#fbbf24';ctx.shadowBlur=14;
+  rrect(ctx,477,143,274,232,16,'#1c1008','#fbbf24',2);ctx.restore();
+  ctx.fillStyle='#fcd34d';ctx.font='bold 13px Jua,sans-serif';ctx.textAlign='center';ctx.fillText('모세혈관',614,170);
+  rrect(ctx,557,396,132,40,10,'#052e16','#34d399',2);
+  ctx.fillStyle='#6ee7b7';ctx.font='bold 11px Jua,sans-serif';ctx.textAlign='center';ctx.fillText('콩팥정맥(노폐물 少)',623,420);
+  rrect(ctx,272,443,132,32,10,'#1e1b4b','#a78bfa',2);
+  ctx.fillStyle='#c4b5fd';ctx.font='bold 11px Jua,sans-serif';ctx.textAlign='center';ctx.fillText('오줌관으로 ↓',338,463);
+  if(currentPhase){
+    const lbls={filtration:{t:'🔵 여과 (토리→보먼주머니)',c:'#60a5fa',x:195,y:152},reabsorption:{t:'🟢 재흡수',c:'#34d399',x:500,y:138},secretion:{t:'🔴 분비',c:'#f87171',x:500,y:138},all:{t:'🌈 전체 과정',c:'#a78bfa',x:430,y:48}};
+    const lb=lbls[currentPhase];
+    if(lb){ctx.save();ctx.font='bold 15px Jua,sans-serif';ctx.textAlign='center';ctx.fillStyle=lb.c;ctx.shadowColor=lb.c;ctx.shadowBlur=14;ctx.fillText(lb.t,lb.x,lb.y);ctx.restore();}
+  }
+}
+function rrect(c,x,y,w,h,r,fill,stroke,lw){c.save();c.beginPath();c.roundRect(x,y,w,h,r);c.fillStyle=fill;c.fill();c.strokeStyle=stroke;c.lineWidth=lw;c.stroke();c.restore();}
+function animate(){
+  ctx.clearRect(0,0,W,H);drawBG();
+  particles.forEach(p=>{p.update();p.draw(ctx);});
+  particles=particles.filter(p=>p.loop||!p.done);
+  if(currentPhase&&particles.filter(p=>!p.loop).length<8)refillParticles();
+  animId=requestAnimationFrame(animate);
+}
+function refillParticles(){
+  if(currentPhase==='filtration')addFilterBatch(true);
+  else if(currentPhase==='reabsorption')addReabBatch(true);
+  else if(currentPhase==='secretion')addSecBatch(true);
+  else if(currentPhase==='all')addAllBatch(true);
+}
+function initCanvas(){
+  if(canvasInited)return;
+  canvas=document.getElementById('nephronCanvas');
+  ctx=canvas.getContext('2d');
+  canvasInited=true; currentPhase=null; drawBG();
+}
+function stopAnim(){if(animId){cancelAnimationFrame(animId);animId=null;}}
+function resetAnim(){
+  stopAnim();particles=[];currentPhase=null;
+  document.querySelectorAll('.phase-btn').forEach(b=>b.classList.remove('active-phase'));
+  document.querySelectorAll('.phase-info-panel').forEach(p=>p.classList.remove('show'));
+  if(ctx){ctx.clearRect(0,0,W,H);drawBG();}
+}
+function spawnBgFlow(){
+  ['water','glucose','amino','urea','protein','rbc'].forEach((t,i)=>{for(let j=0;j<2;j++)particles.push(new Particle(t,'blood_vessel',i*22+j*65));});
+  ['water','glucose','amino'].forEach((t,i)=>{for(let j=0;j<2;j++)particles.push(new Particle(t,'cap_flow',i*30+j*80));});
+}
+function addFilterBatch(r){
+  ['water','glucose','amino','urea'].forEach((t,i)=>{for(let j=0;j<3;j++)particles.push(new Particle(t,'filtration',i*18+j*60));});
+  if(!r){['protein','rbc'].forEach((t,i)=>{for(let k=0;k<3;k++)particles.push(new Particle(t,'blood_vessel',i*28+k*42));});}
+}
+function addReabBatch(r){
+  ['water','glucose','amino'].forEach((t,i)=>{for(let j=0;j<3;j++){particles.push(new Particle(t,'tubule_flow',i*18+j*55));particles.push(new Particle(t,'reabsorption',i*18+j*55+50));}});
+  for(let j=0;j<4;j++){particles.push(new Particle('urea','tubule_flow',j*65));particles.push(new Particle('urea','urine_out',j*65+200));}
+}
+function addSecBatch(r){
+  for(let j=0;j<5;j++)particles.push(new Particle('urea','secretion',j*48));
+  for(let j=0;j<4;j++){particles.push(new Particle('water','tubule_flow',j*70+30));particles.push(new Particle('urea','tubule_flow',j*70+30));}
+}
+function addAllBatch(r){
+  addFilterBatch(true);
+  ['water','glucose','amino'].forEach((t,i)=>{for(let j=0;j<2;j++)particles.push(new Particle(t,'reabsorption',180+i*28+j*70));});
+  for(let j=0;j<3;j++)particles.push(new Particle('urea','secretion',300+j*55));
+  ['water','urea'].forEach((t,i)=>{for(let j=0;j<2;j++)particles.push(new Particle(t,'urine_out',420+i*35+j*70));});
+  ['water','glucose','amino'].forEach((t,i)=>{for(let j=0;j<2;j++)particles.push(new Particle(t,'blood_out',380+i*28+j*65));});
+}
+</script>
+</body>
+</html>
+
+
+
+							<script>
+                            	
+/* ══ 로그인 & 제출 스크립트 ══ */
+var _student   = {cls:'', num:'', name:''};
+var _startTime = null;
+var _quizScore = '미완료';   /* ★ 추가: 퀴즈 점수 저장 변수 */
+
+function doLogin() {
+  var cls  = document.getElementById('inp-class').value.trim();
+  var num  = document.getElementById('inp-num').value.trim();
+  var name = document.getElementById('inp-name').value.trim();
+  var err  = document.getElementById('loginErr');
+  if (!cls || !num || !name) {
+    err.style.display = 'block';
+    if (!cls)  document.getElementById('inp-class').classList.add('err');
+    if (!num)  document.getElementById('inp-num').classList.add('err');
+    if (!name) document.getElementById('inp-name').classList.add('err');
+    return;
+  }
+  err.style.display = 'none';
+  _student   = {cls:cls, num:num, name:name};
+  _startTime = new Date();
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('mainApp').style.display     = 'block';
+  var badge = document.getElementById('studentBadge');
+  badge.textContent    = '👤 ' + cls + '반 ' + num + '번 ' + name;
+  badge.style.display  = 'inline-block';
+  document.getElementById('res-name').textContent  = name;
+  document.getElementById('res-class').textContent = cls + '반 ' + num + '번';
+}
+
+function _calcTime() {
+  if (!_startTime) return '-';
+  var diff = Math.floor((new Date() - _startTime) / 1000);
+  return Math.floor(diff / 60) + '분 ' + (diff % 60) + '초';
+}
+
+function submitResult() {
+  /* ★ 제출 직전 res-score도 최신 값으로 업데이트 */
+  document.getElementById('res-score').textContent = _quizScore;
+
+  var btn = document.getElementById('submitBtn');
+  btn.disabled    = true;
+  btn.textContent = '⏳ 제출 중...';
+
+  /* ★ 아래 URL과 entry 번호를 구글 폼 정보로 교체해주세요 */
+  var FORM_URL = 'https://docs.google.com/forms/u/0/d/e/1FAIpQLSc8N7LyLEChkBJAlTzRf6JQZ9lDEA8VKnjPI7IbNHQpEnD_HQ/formResponse';
+  var ENTRIES  = {
+    cls:   'entry.308517414',   /* 반 */
+    num:   'entry.457152740',   /* 번호 */
+    name:  'entry.1225439561',   /* 이름 */
+    score: 'entry.1395493222',   /* ★ 퀴즈 점수 */
+    time:  'entry.2099570554'    /* 학습 시간 */
+  };
+
+  var body =
+    encodeURIComponent(ENTRIES.cls)   + '=' + encodeURIComponent(_student.cls)   + '&' +
+    encodeURIComponent(ENTRIES.num)   + '=' + encodeURIComponent(_student.num)   + '&' +
+    encodeURIComponent(ENTRIES.name)  + '=' + encodeURIComponent(_student.name)  + '&' +
+    encodeURIComponent(ENTRIES.score) + '=' + encodeURIComponent(_quizScore)     + '&' +  /* ★ 추가 */
+    encodeURIComponent(ENTRIES.time)  + '=' + encodeURIComponent(_calcTime());
+
+  fetch(FORM_URL, {
+    method:  'POST',
+    mode:    'no-cors',
+    headers: {'Content-Type':'application/x-www-form-urlencoded'},
+    body:    body
+  }).then(function() {
+    _showSubmitDone();
+  }).catch(function() {
+    _showSubmitDone();
+  });
+}
+
+function _showSubmitDone() {
+  document.getElementById('submitBtn').style.display  = 'none';
+  document.getElementById('submitDone').style.display = 'block';
+}
+
+
+/* ══ 기존 메인 스크립트 ══ */
+const TOTAL = 8;
+let unlockedUpTo = 0, currentChapter = 0, nextAfterCongrats = 1;
+const CHAPTER_TASKS = {
+  0: ['hint'],
+  1: ['step-carb','step-prot','step-path','blank'],
+  2: ['organ','step-k','step-u','step-b','step-ur'],
+  3: ['svg-tori','svg-bowman','svg-tubule','svg-cap','step-n1','step-n2','step-n3'],
+  4: ['filtration','reabsorption','secretion','all'],
+  5: ['cards'],
+  6: ['sticker','quiz'],
+  7: [],
+};
+const completedTasks = {};
+for (let i = 0; i < TOTAL; i++) completedTasks[i] = new Set();
+let flippedCards = new Set();
+const TOTAL_CARDS = 12;
+function markTask(chapterIdx, taskKey) {
+  completedTasks[chapterIdx].add(taskKey);
+  const el = document.getElementById(`task-${chapterIdx}-${taskKey}`);
+  if (el) el.classList.add('done');
+  checkAllTasks(chapterIdx);
+}
+function checkAllTasks(chapterIdx) {
+  const required = CHAPTER_TASKS[chapterIdx];
+  if (!required) return;
+  let allDone = chapterIdx === 5
+    ? (flippedCards.size >= TOTAL_CARDS)
+    : required.every(t => completedTasks[chapterIdx].has(t));
+  const btn = document.getElementById(`complete-btn-${chapterIdx}`);
+  if (btn) btn.classList.toggle('btn-locked', !allDone);
+}
+function tryComplete(idx) {
+  const required = CHAPTER_TASKS[idx];
+  let allDone = idx === 5
+    ? (flippedCards.size >= TOTAL_CARDS)
+    : (required ? required.every(t => completedTasks[idx].has(t)) : true);
+  if (!allDone) {
+    let missing = [];
+    if (idx === 5) {
+      missing.push(`카드 ${TOTAL_CARDS - flippedCards.size}개 더 뒤집기`);
+    } else {
+      required.forEach(t => {
+        if (!completedTasks[idx].has(t)) {
+          const el = document.getElementById(`task-${idx}-${t}`);
+          if (el) missing.push(el.textContent.trim().replace(/^[0-9]+\s*/,''));
+        }
+      });
+    }
+    showToast('🔒 아직 안 한 활동이 있어요! ' + (missing[0] || '') + ' 💕');
+    return;
+  }
+  completeChapter(idx);
+}
+function completeChapter(idx) {
+  if (idx >= unlockedUpTo) { unlockedUpTo = idx + 1; unlockBtn(idx + 1); }
+  nextAfterCongrats = idx + 1;
+  if (idx + 1 < TOTAL) showCongrats(idx);
+  else showFinalCongrats();
+  updateProg();
+}
+function goChapter(idx) {
+  if (idx > unlockedUpTo) { showToast('🔒 이전 챕터를 먼저 완료해주세요! 💕'); return; }
+  currentChapter = idx;
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.ch-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + idx).classList.add('active');
+  document.getElementById('ch-btn-' + idx).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (idx === 4) initCanvas();
+  if (idx === 6) initQuiz();
+  updateProg();
+}
+function unlockBtn(idx) {
+  if (idx >= TOTAL) return;
+  const btn = document.getElementById('ch-btn-' + idx);
+  if (!btn) return;
+  btn.classList.remove('locked');
+  btn.textContent = btn.textContent.replace('🔒 ', '');
+}
+const congratsMsgs = [
+  ['🌟','학습 목표 확인 완료!','이제 노폐물에 대해 알아봐요 💕'],
+  ['💧','노폐물 챕터 완료!','배설계 구조를 공부해봐요 🫘'],
+  ['🫘','배설계 구조 완료!','네프론을 자세히 들여다봐요 🔬'],
+  ['🔬','네프론 챕터 완료!','물질이 어떻게 이동하는지 봐봐요 🎬'],
+  ['🎬','애니메이션 챕터 완료!','핵심 용어를 플래시카드로 외워봐요 🃏'],
+  ['🃏','플래시카드 완료!','이제 퀴즈에 도전해봐요! ✏️'],
+  ['✏️','퀴즈 완료!','마지막으로 스스로 점검해봐요 ✅'],
+];
+function showCongrats(idx) {
+  const m = congratsMsgs[idx] || ['🎉','챕터 완료!','수고했어요!'];
+  document.getElementById('congratsEmoji').textContent = m[0];
+  document.getElementById('congratsTitle').textContent = m[1];
+  document.getElementById('congratsMsg').textContent   = m[2];
+  document.getElementById('congratsOverlay').classList.add('show');
+}
+function showFinalCongrats() {
+  document.getElementById('congratsEmoji').textContent = '🏆';
+  document.getElementById('congratsTitle').textContent = '모든 챕터 완료!';
+  document.getElementById('congratsMsg').textContent   = '배설계 마스터! 정말 수고했어요 🩷✨';
+  document.getElementById('congratsOverlay').classList.add('show');
+}
+function closeCongratsAndNext() {
+  document.getElementById('congratsOverlay').classList.remove('show');
+  if (nextAfterCongrats < TOTAL) goChapter(nextAfterCongrats);
+}
+function updateProg() {
+  const pct = Math.round((unlockedUpTo / TOTAL) * 100);
+  document.getElementById('pFill').style.width = pct + '%';
+  document.getElementById('progPct').textContent = pct + '%';
+}
+let toastTimer = null;
+function showToast(msg) {
+  const t = document.getElementById('lockToast');
+  t.textContent = msg; t.classList.add('show');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+}
+function toggleEl(id) { const e = document.getElementById(id); e.style.display = e.style.display === 'none' ? 'block' : 'none'; }
+function toggleStep(id) { document.getElementById(id).classList.toggle('revealed'); }
+const organData = {
+  kidney:  '🫘 <strong>콩팥</strong>: 혈액 속 노폐물을 걸러 오줌을 만드는 기관. 등 쪽 허리 좌우 한 쌍!',
+  ureter:  '〰️ <strong>오줌관</strong>: 콩팥과 방광을 연결하는 긴 관. 오줌 운반!',
+  bladder: '💛 <strong>방광</strong>: 오줌을 일시적으로 모아두는 기관.',
+  urethra: '⬇️ <strong>요도</strong>: 방광의 오줌을 몸 밖으로 내보내는 통로.'
+};
+const nephronData = {
+  tori:      '🩷 <strong>토리</strong> (구 사구체): 모세혈관이 실뭉치처럼 뭉친 부분. <strong>여과</strong>가 일어나요!',
+  bowman:    '💜 <strong>보먼주머니</strong>: 토리를 둘러싼 주머니. 여과액이 모여요.',
+  tubule:    '💚 <strong>세뇨관</strong>: 보먼주머니와 연결된 긴 관. <strong>재흡수·분비</strong>가 일어나요!',
+  capillary: '💛 <strong>모세혈관</strong>: 세뇨관을 둘러싼 혈관. 재흡수·분비를 담당해요.'
+};
+function showOrgan(key) {
+  const el = document.getElementById('organ-info');
+  el.style.display = 'block'; el.innerHTML = organData[key];
+  markTask(2, 'organ');
+}
+function showNephronPart(key) {
+  const el = document.getElementById('nephron-info');
+  el.style.display = 'block'; el.innerHTML = nephronData[key];
+}
+function chkBlanks1() {
+  const ids = ['bw1','bw2','bw3'];
+  let ok = 0;
+  ids.forEach(id => {
+    const i = document.getElementById(id);
+    if (i.value.trim() === i.dataset.ans) { i.className = 'blank ok'; ok++; }
+    else i.className = 'blank err';
+  });
+  document.getElementById('rw1').classList.add('show');
+  document.getElementById('sw1').textContent = ok + '/3 정답 🌸';
+  document.getElementById('mw1').textContent = ['다시 도전! 💪','조금 더! 🔥','거의! 😊','완벽해요! 🎉'][ok];
+  if (ok === 3) markTask(1, 'blank');
+}
+function rstBlanks(ids, rId) {
+  ids.forEach(id => { const i = document.getElementById(id); i.value = ''; i.className = 'blank'; });
+  document.getElementById(rId).classList.remove('show');
+}
+function flipCard(el, id) {
+  el.classList.toggle('flipped');
+  if (el.classList.contains('flipped')) flippedCards.add(id);
+  document.getElementById('fc-count-display').textContent = `${flippedCards.size} / ${TOTAL_CARDS} 완료`;
+  const taskEl = document.getElementById('task-5-cards-text');
+  if (taskEl) taskEl.textContent = `카드 뒤집기: ${flippedCards.size} / ${TOTAL_CARDS}`;
+  if (flippedCards.size >= TOTAL_CARDS) {
+    markTask(5, 'cards');
+    const taskItem = document.getElementById('task-5-cards');
+    if (taskItem) taskItem.classList.add('done');
+  }
+  checkAllTasks(5);
+}
+function resetAllCards() {
+  document.querySelectorAll('.fc').forEach(f => f.classList.remove('flipped'));
+  flippedCards.clear();
+  completedTasks[5].delete('cards');
+  document.getElementById('fc-count-display').textContent = `0 / ${TOTAL_CARDS} 완료`;
+  const taskEl = document.getElementById('task-5-cards-text');
+  if (taskEl) taskEl.textContent = `카드 뒤집기: 0 / ${TOTAL_CARDS}`;
+  const taskItem = document.getElementById('task-5-cards');
+  if (taskItem) taskItem.classList.remove('done');
+  checkAllTasks(5);
+}
+let selectedSticker = null;
+const placedStickers = {};
+const stickerEmoji = { kidney:'🫘', ureter:'〰️', bladder:'💛', urethra:'⬇️', tori:'🔵', bowman:'💜', tubule:'🟢' };
+const dzPositions = {
+  'dz-kidney-l':{x:200,y:185},'dz-kidney-r':{x:500,y:185},
+  'dz-ureter-l':{x:210,y:298},'dz-ureter-r':{x:482,y:298},
+  'dz-bladder':{x:350,y:355},'dz-urethra':{x:350,y:412},
+  'dz-tori':{x:90,y:310},'dz-bowman':{x:90,y:276},'dz-tubule':{x:160,y:355}
+};
+const dzCorrect = {
+  'dz-kidney-l':'kidney','dz-kidney-r':'kidney',
+  'dz-ureter-l':'ureter','dz-ureter-r':'ureter',
+  'dz-bladder':'bladder','dz-urethra':'urethra',
+  'dz-tori':'tori','dz-bowman':'bowman','dz-tubule':'tubule'
+};
+function selectSticker(type) {
+  selectedSticker = type;
+  document.querySelectorAll('.sticker-item').forEach(el => el.classList.remove('selected-sticker'));
+  document.getElementById('stk-' + type).classList.add('selected-sticker');
+}
+function dropSticker(type, dzId) {
+  if (!selectedSticker) {
+    const fb = document.getElementById('sticker-fb');
+    fb.textContent = '🌸 먼저 위에서 스티커를 선택해주세요!';
+    fb.className = 'sticker-feedback partial show'; return;
+  }
+  placedStickers[dzId] = selectedSticker;
+  renderPlacedSticker(dzId, selectedSticker);
+  selectedSticker = null;
+  document.querySelectorAll('.sticker-item').forEach(el => el.classList.remove('selected-sticker'));
+}
+function renderPlacedSticker(dzId, type) {
+  const svg = document.getElementById('stickerSvg');
+  const old = document.getElementById('placed-' + dzId); if (old) old.remove();
+  const pos = dzPositions[dzId]; if (!pos) return;
+  const g = document.createElementNS('http://www.w3.org/2000/svg','g');
+  g.id = 'placed-' + dzId; g.setAttribute('class','placed-sticker');
+  const t = document.createElementNS('http://www.w3.org/2000/svg','text');
+  t.setAttribute('x', pos.x); t.setAttribute('y', pos.y + 8);
+  t.setAttribute('text-anchor','middle'); t.setAttribute('font-size','26');
+  t.textContent = stickerEmoji[type] || '?'; g.appendChild(t); svg.appendChild(g);
+}
+function checkStickers() {
+  let total = Object.keys(dzCorrect).length, correct = 0;
+  Object.entries(dzCorrect).forEach(([dzId, ct]) => {
+    const placed = placedStickers[dzId];
+    const g = document.getElementById('placed-' + dzId);
+    if (placed === ct) { correct++; if (g) g.querySelector('text').setAttribute('fill','#34d399'); }
+    else if (g) g.querySelector('text').setAttribute('fill','#f87171');
+  });
+  const fb = document.getElementById('sticker-fb');
+  fb.className = 'sticker-feedback show ' + (correct === total ? 'all-correct' : 'partial');
+  fb.textContent = correct === total
+    ? `🎉 완벽해요! ${correct}/${total} 모두 정답! 정말 잘했어요 🌸`
+    : `💪 ${correct}/${total} 정답! 빨간색 스티커를 다시 확인해봐요 🌸`;
+  markTask(6, 'sticker');
+}
+function resetStickers() {
+  Object.keys(placedStickers).forEach(k => delete placedStickers[k]);
+  document.querySelectorAll('.placed-sticker').forEach(el => el.remove());
+  document.getElementById('sticker-fb').className = 'sticker-feedback';
+  selectedSticker = null;
+  document.querySelectorAll('.sticker-item').forEach(el => el.classList.remove('selected-sticker'));
+}
+const QUESTIONS = [
+  {q:'1. 오줌 생성 과정의 순서로 옳은 것은?',opts:['① 재흡수→여과→분비','② 여과→재흡수→분비','③ 여과→분비→재흡수','④ 분비→여과→재흡수'],ans:1,exp:'오줌은 <strong>여과 → 재흡수 → 분비</strong> 순서로 만들어져요! 🌸'},
+  {q:'2. 건강한 사람의 오줌에 포함된 물질은?',opts:['① 포도당','② 단백질','③ 요소','④ 혈구'],ans:2,exp:'<strong>요소</strong>는 노폐물이라 재흡수되지 않고 오줌으로 배출돼요! 🌸'},
+  {q:'3. 오줌 생성의 기본 단위로 토리·보먼주머니·세뇨관으로 구성된 것은?',opts:['① 방광','② 오줌관','③ 네프론','④ 요도'],ans:2,exp:'<strong>네프론</strong>이 오줌 생성의 기본 단위예요! 🔬'},
+  {q:'4. 여과가 일어나는 경로는?',opts:['① 세뇨관→모세혈관','② 모세혈관→세뇨관','③ 토리→보먼주머니','④ 보먼주머니→토리'],ans:2,exp:'여과는 <strong>토리 → 보먼주머니</strong> 방향으로 크기가 작은 물질이 이동해요 🔵'},
+  {q:'5. 오줌에서 포도당이 검출됐을 때 이상이 있는 과정은?',opts:['① 여과','② 재흡수','③ 분비','④ 배설'],ans:1,exp:'포도당은 세뇨관에서 100% <strong>재흡수</strong>돼야 해요! 오줌에서 나왔다면 재흡수 문제예요 🏥'},
+  {q:'6. 암모니아에 대한 설명으로 옳은 것은?',opts:['① 탄수화물 분해 시 만들어진다','② 독성이 약하다','③ 간에서 요소로 전환된다','④ 날숨으로 배출된다'],ans:2,exp:'암모니아는 <strong>단백질</strong> 분해 시 생성! <strong>간</strong>에서 <strong>요소</strong>로 전환돼요 🌸'},
+  {q:'7. 토리에서 여과되지 않는 물질로만 묶인 것은?',opts:['① 물, 포도당','② 요소, 아미노산','③ 단백질, 혈구','④ 물, 요소'],ans:2,exp:'<strong>단백질</strong>과 <strong>혈구</strong>는 크기가 커서 여과 안 돼요! 🌸'},
+];
+let curQ = 0, quizResults = [], quizAnswered = false, quizInited = false;
+function initQuiz() {
+  if (quizInited) return;
+  quizInited = true; curQ = 0; quizResults = []; quizAnswered = false;
+  renderQuiz();
+}
+function renderQuiz() {
+  renderDots();
+  if (curQ >= QUESTIONS.length) { showQuizResult(); return; }
+  const q = QUESTIONS[curQ]; quizAnswered = false;
+  document.getElementById('quizWrap').innerHTML = `
+    <div class="quiz-q-display">
+      <div class="quiz-q-num">문제 ${curQ+1} / ${QUESTIONS.length} 🌸</div>
+      <div class="quiz-q-text">${q.q}</div>
+      <div class="quiz-opts" id="quizOpts">
+        ${q.opts.map((o,i) => `<button class="quiz-opt" onclick="answerQuiz(${i})">${o}</button>`).join('')}
+      </div>
+    </div>
+    <div class="explanation-box" id="expBox">
+      <div class="exp-title" id="expTitle"></div>
+      <div class="exp-text"  id="expText"></div>
+    </div>
+    <div id="nextBtnWrap" style="text-align:center;margin-top:12px;display:none;">
+      <button class="btn btn-pink" onclick="nextQuiz()">
+        ${curQ+1 < QUESTIONS.length ? '다음 문제 →' : '결과 보기 🎉'}
+      </button>
+    </div>`;
+}
+function answerQuiz(idx) {
+  if (quizAnswered) return; quizAnswered = true;
+  const q = QUESTIONS[curQ], correct = idx === q.ans;
+  quizResults.push(correct);
+  document.querySelectorAll('.quiz-opt').forEach((o, i) => {
+    o.disabled = true; o.style.cursor = 'default';
+    if (i === q.ans) o.classList.add('right');
+    else if (i === idx && !correct) o.classList.add('wrong');
+  });
+  const box = document.getElementById('expBox');
+  box.className = 'explanation-box show ' + (correct ? 'correct-exp' : 'wrong-exp');
+  document.getElementById('expTitle').textContent = correct ? '✅ 정답이에요! 🎉' : '❌ 아쉬워요!';
+  document.getElementById('expText').innerHTML = q.exp;
+  document.getElementById('nextBtnWrap').style.display = 'block';
+  renderDots();
+}
+function nextQuiz() { curQ++; renderQuiz(); }
+function renderDots() {
+  document.getElementById('quizDots').innerHTML = QUESTIONS.map((_, i) => {
+    let c = 'q-dot';
+    if (i < quizResults.length) c += quizResults[i] ? ' done-correct' : ' done-wrong';
+    else if (i === curQ) c += ' current';
+    return `<div class="${c}"></div>`;
+  }).join('');
+}
+function showQuizResult() {
+  const correct = quizResults.filter(Boolean).length, total = QUESTIONS.length;
+  const pct = Math.round(correct / total * 100);
+
+  /* ★ 수정: 퀴즈 점수 전역 변수에 저장 + 제출 카드에도 즉시 반영 */
+  _quizScore = correct + '/' + total + ' (' + pct + '%)';
+  document.getElementById('res-score').textContent = _quizScore;
+
+  const msgs = ['더 열심히 복습해봐요! 💪','조금만 더! 🔥','절반 이상! 😊','잘 하고 있어요! 👍','거의 완벽! 🌟','완벽해요! 🎉'];
+  document.getElementById('quizWrap').innerHTML = `
+    <div style="text-align:center;padding:24px 0;">
+      <div style="font-size:3em;margin-bottom:12px;">${pct===100?'🏆':pct>=80?'🌟':pct>=60?'😊':'💪'}</div>
+      <div style="font-size:1.8em;color:var(--pink-dark);margin-bottom:8px;">${correct} / ${total} 정답!</div>
+      <div style="color:var(--muted);margin-bottom:18px;">${msgs[Math.floor(pct/20)]||msgs[5]}</div>
+      <button class="btn btn-ghost" onclick="restartQuiz()">🔄 다시 풀기</button>
+    </div>`;
+  markTask(6, 'quiz');
+}
+function restartQuiz() {
+  curQ = 0; quizResults = []; quizAnswered = false; quizInited = false;
+  initQuiz();
+}
+function doCheck(li) {
+  const cb = li.querySelector('input'); cb.checked = !cb.checked; li.classList.toggle('done', cb.checked);
+  const total = document.querySelectorAll('#cl-list li').length;
+  const done  = document.querySelectorAll('#cl-list li.done').length;
+  const rd = document.getElementById('cl-result');
+  if (done === total) {
+    rd.innerHTML = '<div class="hl hl-green" style="text-align:center"><strong>🎉🌸 모든 학습 목표 달성! 수고했어요! 🌸🎉</strong></div>';
+    completeChapter(7);
+  } else {
+    rd.innerHTML = `<div class="hl hl-pink"><strong>${done}/${total} 완료</strong> — 계속 학습해봐요! 💕</div>`;
+  }
+}
+function runPhase(phase) {
+  markTask(4, phase);
+  document.getElementById('btn-' + phase).classList.add('phase-done');
+  stopAnim(); particles = []; currentPhase = phase;
+  document.querySelectorAll('.phase-btn').forEach(b => b.classList.remove('active-phase'));
+  document.getElementById('btn-' + phase).classList.add('active-phase');
+  document.querySelectorAll('.phase-info-panel').forEach(p => p.classList.remove('show'));
+  document.getElementById('panel-' + phase).classList.add('show');
+  spawnBgFlow();
+  if (phase==='filtration')        addFilterBatch(false);
+  else if (phase==='reabsorption') addReabBatch(false);
+  else if (phase==='secretion')    addSecBatch(false);
+  else if (phase==='all')          addAllBatch(false);
+  animate();
+}
+let canvas, ctx, animId = null, particles = [], currentPhase = null, canvasInited = false;
+const W = 860, H = 480;
+const TUBULE_PATH = [
+  {x:300,y:200},{x:345,y:218},{x:392,y:192},{x:442,y:218},
+  {x:462,y:268},{x:432,y:318},{x:382,y:338},{x:342,y:358},{x:312,y:390},{x:312,y:428}
+];
+const MATERIALS = {
+  water:   {name:'물',      color:'#60a5fa', shape:'circle',   size:9},
+  glucose: {name:'포도당',  color:'#34d399', shape:'square',   size:10},
+  amino:   {name:'아미노산',color:'#fbbf24', shape:'triangle', size:11},
+  urea:    {name:'요소',    color:'#f472b6', shape:'pentagon', size:10},
+  protein: {name:'단백질',  color:'#f87171', shape:'diamond',  size:13},
+  rbc:     {name:'혈구',    color:'#a78bfa', shape:'ellipse',  size:14},
+};
+const PATHS = {
+  blood_in:    {pts:[{x:108,y:192},{x:140,y:196},{x:165,y:198},{x:185,y:199},{x:195,y:200}],loop:false},
+  filtration:  {pts:[{x:220,y:185},{x:252,y:180},{x:282,y:192},{x:300,y:200}],loop:false},
+  tubule_flow: {pts:TUBULE_PATH,loop:false},
+  reabsorption:{pts:[{x:435,y:268},{x:462,y:262},{x:492,y:254},{x:522,y:249},{x:550,y:247}],loop:false},
+  secretion:   {pts:[{x:532,y:298},{x:502,y:304},{x:472,y:310},{x:442,y:318},{x:416,y:325}],loop:false},
+  urine_out:   {pts:[{x:312,y:428},{x:322,y:452},{x:332,y:466}],loop:false},
+  blood_out:   {pts:[{x:602,y:278},{x:632,y:348},{x:646,y:388},{x:656,y:412}],loop:false},
+  blood_vessel:{pts:[{x:108,y:175},{x:155,y:162},{x:200,y:168},{x:195,y:200},{x:170,y:222},{x:130,y:218},{x:108,y:195}],loop:true},
+  cap_flow:    {pts:[{x:490,y:165},{x:600,y:162},{x:710,y:168},{x:720,y:250},{x:710,y:330},{x:600,y:335},{x:490,y:330},{x:480,y:250},{x:490,y:165}],loop:true},
+};
+class Particle {
+  constructor(type, pathKey, delay, speedMult) {
+    this.type=type; this.mat=MATERIALS[type]; this.pathKey=pathKey;
+    this.pathDef=PATHS[pathKey]; this.delay=delay||0;
+    this.speed=(0.004+Math.random()*0.003)*(speedMult||1);
+    this.t=0; this.done=false; this.alpha=0; this.pulse=Math.random()*Math.PI*2;
+    this.loop=this.pathDef.loop;
+  }
+  getPos() {
+    const pts=this.pathDef.pts; if(pts.length<2)return pts[0];
+    const seg=this.t*(pts.length-1); const i=Math.min(Math.floor(seg),pts.length-2);
+    const f=seg-i; const a=pts[i],b=pts[i+1];
+    return{x:a.x+(b.x-a.x)*f,y:a.y+(b.y-a.y)*f};
+  }
+  update() {
+    if(this.delay>0){this.delay--;return;}
+    this.alpha=Math.min(1,this.alpha+0.07); this.pulse+=0.09; this.t+=this.speed;
+    if(this.t>=1){if(this.loop)this.t=0;else{this.t=1;this.done=true;}}
+  }
+  draw(c) {
+    if(this.delay>0||this.alpha<=0)return;
+    const pos=this.getPos(),m=this.mat,s=m.size+Math.sin(this.pulse)*1.4;
+    c.save(); c.globalAlpha=this.alpha*(this.done?0.35:1);
+    c.translate(pos.x,pos.y); c.shadowColor=m.color; c.shadowBlur=10;
+    c.fillStyle=m.color; c.strokeStyle='rgba(255,255,255,0.55)'; c.lineWidth=1.5;
+    switch(m.shape){
+      case 'circle':   c.beginPath();c.arc(0,0,s,0,Math.PI*2);c.fill();c.stroke();break;
+      case 'square':   c.beginPath();c.rect(-s,-s,s*2,s*2);c.fill();c.stroke();break;
+      case 'triangle': c.beginPath();c.moveTo(0,-s*1.2);c.lineTo(s*1.1,s*.8);c.lineTo(-s*1.1,s*.8);c.closePath();c.fill();c.stroke();break;
+      case 'pentagon': {c.beginPath();for(let i=0;i<5;i++){const a=Math.PI*2/5*i-Math.PI/2;i?c.lineTo(Math.cos(a)*s,Math.sin(a)*s):c.moveTo(Math.cos(a)*s,Math.sin(a)*s);}c.closePath();c.fill();c.stroke();break;}
+      case 'diamond':  c.beginPath();c.moveTo(0,-s*1.3);c.lineTo(s*.9,0);c.lineTo(0,s*1.3);c.lineTo(-s*.9,0);c.closePath();c.fill();c.stroke();break;
+      case 'ellipse':  c.beginPath();c.ellipse(0,0,s*1.4,s*.8,0,0,Math.PI*2);c.fill();c.stroke();break;
+    }
+    c.restore();
+  }
+}
+function drawBG() {
+  ctx.fillStyle='#0d1b2a'; ctx.fillRect(0,0,W,H);
+  rrect(ctx,15,168,92,48,10,'#7f1d1d','#ef4444',2);
+  ctx.fillStyle='#fca5a5';ctx.font='bold 12px Jua,sans-serif';ctx.textAlign='center';
+  ctx.fillText('콩팥동맥',61,190);ctx.fillStyle='#fecaca';ctx.font='10px Jua,sans-serif';ctx.fillText('노폐물 多',61,205);
+  ctx.save();ctx.shadowColor='#f472b6';ctx.shadowBlur=22;
+  ctx.beginPath();ctx.ellipse(195,200,74,64,0,0,Math.PI*2);
+  ctx.fillStyle='#1e1028';ctx.fill();ctx.strokeStyle='#f472b6';ctx.lineWidth=2.5;ctx.stroke();ctx.restore();
+  for(let i=0;i<4;i++){ctx.strokeStyle='rgba(244,114,182,0.45)';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(155,176+i*12);ctx.bezierCurveTo(170,166+i*12,185,186+i*12,200,176+i*12);ctx.bezierCurveTo(215,166+i*12,229,184+i*12,236,176+i*12);ctx.stroke();}
+  ctx.fillStyle='#f9a8d4';ctx.font='bold 12px Jua,sans-serif';ctx.textAlign='center';ctx.fillText('토리',195,274);
+  ctx.fillStyle='#fbcfe8';ctx.font='10px Jua,sans-serif';ctx.fillText('(구 사구체)',195,288);
+  ctx.save();ctx.shadowColor='#a78bfa';ctx.shadowBlur=14;
+  ctx.beginPath();ctx.ellipse(195,200,110,100,0,0,Math.PI*2);
+  ctx.strokeStyle='#a78bfa';ctx.lineWidth=2;ctx.setLineDash([6,4]);ctx.stroke();ctx.setLineDash([]);ctx.restore();
+  ctx.fillStyle='#c4b5fd';ctx.font='bold 11px Jua,sans-serif';ctx.fillText('보먼주머니',195,108);
+  ctx.save();ctx.shadowColor='#34d399';ctx.shadowBlur=16;
+  ctx.beginPath();ctx.moveTo(TUBULE_PATH[0].x,TUBULE_PATH[0].y);
+  for(let i=1;i<TUBULE_PATH.length;i++){const p=TUBULE_PATH[i-1],c2=TUBULE_PATH[i];ctx.quadraticCurveTo(p.x,p.y,(p.x+c2.x)/2,(p.y+c2.y)/2);}
+  ctx.strokeStyle='#34d399';ctx.lineWidth=18;ctx.lineCap='round';ctx.stroke();
+  ctx.strokeStyle='#052e16';ctx.lineWidth=12;ctx.stroke();ctx.restore();
+  ctx.fillStyle='#6ee7b7';ctx.font='bold 12px Jua,sans-serif';ctx.textAlign='left';ctx.fillText('세뇨관',348,228);
+  ctx.save();ctx.shadowColor='#fbbf24';ctx.shadowBlur=14;
+  rrect(ctx,477,143,274,232,16,'#1c1008','#fbbf24',2);ctx.restore();
+  ctx.fillStyle='#fcd34d';ctx.font='bold 13px Jua,sans-serif';ctx.textAlign='center';ctx.fillText('모세혈관',614,170);
+  rrect(ctx,557,396,132,40,10,'#052e16','#34d399',2);
+  ctx.fillStyle='#6ee7b7';ctx.font='bold 11px Jua,sans-serif';ctx.textAlign='center';ctx.fillText('콩팥정맥(노폐물 少)',623,420);
+  rrect(ctx,272,443,132,32,10,'#1e1b4b','#a78bfa',2);
+  ctx.fillStyle='#c4b5fd';ctx.font='bold 11px Jua,sans-serif';ctx.textAlign='center';ctx.fillText('오줌관으로 ↓',338,463);
+  if(currentPhase){
+    const lbls={filtration:{t:'🔵 여과 (토리→보먼주머니)',c:'#60a5fa',x:195,y:152},reabsorption:{t:'🟢 재흡수',c:'#34d399',x:500,y:138},secretion:{t:'🔴 분비',c:'#f87171',x:500,y:138},all:{t:'🌈 전체 과정',c:'#a78bfa',x:430,y:48}};
+    const lb=lbls[currentPhase];
+    if(lb){ctx.save();ctx.font='bold 15px Jua,sans-serif';ctx.textAlign='center';ctx.fillStyle=lb.c;ctx.shadowColor=lb.c;ctx.shadowBlur=14;ctx.fillText(lb.t,lb.x,lb.y);ctx.restore();}
+  }
+}
+function rrect(c,x,y,w,h,r,fill,stroke,lw){c.save();c.beginPath();c.roundRect(x,y,w,h,r);c.fillStyle=fill;c.fill();c.strokeStyle=stroke;c.lineWidth=lw;c.stroke();c.restore();}
+function animate(){
+  ctx.clearRect(0,0,W,H);drawBG();
+  particles.forEach(p=>{p.update();p.draw(ctx);});
+  particles=particles.filter(p=>p.loop||!p.done);
+  if(currentPhase&&particles.filter(p=>!p.loop).length<8)refillParticles();
+  animId=requestAnimationFrame(animate);
+}
+function refillParticles(){
+  if(currentPhase==='filtration')addFilterBatch(true);
+  else if(currentPhase==='reabsorption')addReabBatch(true);
+  else if(currentPhase==='secretion')addSecBatch(true);
+  else if(currentPhase==='all')addAllBatch(true);
+}
+function initCanvas(){
+  if(canvasInited)return;
+  canvas=document.getElementById('nephronCanvas');
+  ctx=canvas.getContext('2d');
+  canvasInited=true; currentPhase=null; drawBG();
+}
+function stopAnim(){if(animId){cancelAnimationFrame(animId);animId=null;}}
+function resetAnim(){
+  stopAnim();particles=[];currentPhase=null;
+  document.querySelectorAll('.phase-btn').forEach(b=>b.classList.remove('active-phase'));
+  document.querySelectorAll('.phase-info-panel').forEach(p=>p.classList.remove('show'));
+  if(ctx){ctx.clearRect(0,0,W,H);drawBG();}
+}
+function spawnBgFlow(){
+  ['water','glucose','amino','urea','protein','rbc'].forEach((t,i)=>{for(let j=0;j<2;j++)particles.push(new Particle(t,'blood_vessel',i*22+j*65));});
+  ['water','glucose','amino'].forEach((t,i)=>{for(let j=0;j<2;j++)particles.push(new Particle(t,'cap_flow',i*30+j*80));});
+}
+function addFilterBatch(r){
+  ['water','glucose','amino','urea'].forEach((t,i)=>{for(let j=0;j<3;j++)particles.push(new Particle(t,'filtration',i*18+j*60));});
+  if(!r){['protein','rbc'].forEach((t,i)=>{for(let k=0;k<3;k++)particles.push(new Particle(t,'blood_vessel',i*28+k*42));});}
+}
+function addReabBatch(r){
+  ['water','glucose','amino'].forEach((t,i)=>{for(let j=0;j<3;j++){particles.push(new Particle(t,'tubule_flow',i*18+j*55));particles.push(new Particle(t,'reabsorption',i*18+j*55+50));}});
+  for(let j=0;j<4;j++){particles.push(new Particle('urea','tubule_flow',j*65));particles.push(new Particle('urea','urine_out',j*65+200));}
+}
+function addSecBatch(r){
+  for(let j=0;j<5;j++)particles.push(new Particle('urea','secretion',j*48));
+  for(let j=0;j<4;j++){particles.push(new Particle('water','tubule_flow',j*70+30));particles.push(new Particle('urea','tubule_flow',j*70+30));}
+}
+function addAllBatch(r){
+  addFilterBatch(true);
+  ['water','glucose','amino'].forEach((t,i)=>{for(let j=0;j<2;j++)particles.push(new Particle(t,'reabsorption',180+i*28+j*70));});
+  for(let j=0;j<3;j++)particles.push(new Particle('urea','secretion',300+j*55));
+  ['water','urea'].forEach((t,i)=>{for(let j=0;j<2;j++)particles.push(new Particle(t,'urine_out',420+i*35+j*70));});
+  ['water','glucose','amino'].forEach((t,i)=>{for(let j=0;j<2;j++)particles.push(new Particle(t,'blood_out',380+i*28+j*65));});
+}
+
+
+							</script>
+                        </body>
+                        </html>
+                    
